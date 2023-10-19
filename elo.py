@@ -1,13 +1,13 @@
 import mysql.connector
 
 mydb = mysql.connector.connect(
-  host="localhost",
-  user="root",
-  password="03220301513",
-  database="mydatabase"
+  host="185.253.218.123",
+  user="wwmdhvjb_student",
+  password="dzikaszyszk@2024",
+  database="wwmdhvjb_duckyfm"
 )
 
 
 mycursor = mydb.cursor()
-mycursor.execute("CREATE TABLE users (name VARCHAR(27), surname VARCHAR(51))")
+#mycursor.execute("CREATE TABLE users (name VARCHAR(27), surname VARCHAR(51))")
 
