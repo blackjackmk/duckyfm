@@ -1,4 +1,3 @@
-from credentials import *
 import sqlite3
 import os
 
