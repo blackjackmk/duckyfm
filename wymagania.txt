@@ -1,0 +1,93 @@
+STUDIO NAGRAN:
+
+- pracujemy z interfejsem graficznym, logo aplikacji,
+
+- dobrze by bylo, aby logo aplikacji mozna bylo gdzies zmienic
+
+- uwaga, chcialbym moc edytowac nazwe mojego studia
+
+- interfejs byl wielookienkowy
+
+- chcialbym aby interfejs byl w miare ladny, intuicyjny
+
+- chcialbym miec akclerator czyli w systemie skroty klawiszowe
+
+- intuicyjny czyli nawiazuje ukladem do standardow innych programow: menu, uklad tego menu
+
+- menu: 2: zwykle i podreczne, w podrecznym najważniejsze funkcje programu
+
+- uruchomiene aplikacji to ekran logowania
+
+- na ekranie logowania chcialbym aby istniala mozliwosc rejestracji
+
+- dane trzymamy w bazie danych
+
+- gdy startujemy aplikacje, a bazy nie ma, to tworzona jest baza standardowa
+
+- pierwszy zarejestrowany uzytkownik staje sie administratorem systemu
+
+- studio pozwala tworzyc, edytowac, usuwac informacje o:
+
+      *     plytach
+
+      *     tworcach
+
+      *     utworach
+
+      *     oraz przypisywac do plyt utwory i tworcow tych utworow
+
+      *     jesli w trakcie przypisywania utworow do plyty podamy tworce, to wszystkie
+
+            utwory na plycie będą należały automatycznie do tego autora
+
+- opcja dodatkowa to, przy dodawaniu utworu/plyty pojawia sie lista obrazków wyszukana w folderze aplikacji (wskazanym)/ewentualnie w jego podkatalogach
+
+- studio moze miec wiele plyt i mozemy nimi zarzadzac
+
+- zarzadza przypisaniami administrator
+
+- administrator moze awansowac innych na administratora
+
+- moze tez byc usuniety ale nie gdy byl pierwszym adminem na liscie utworzonych
+
+- moze sam zrezygnowac, ale uwaga: musi wskazac kogos innego z listy
+
+- zwykly uzytkownik tylko ma opcje przegladania
+
+- nie moze byc sytuacji, ze admina nie ma
+
+- każdy może zarządzać swoim profilem
+
+- dodatkowo gdzies niech istnieje przycisk do regulaminu, regulamin ładujemy z pliku tekstowego, ale gdy pliku nie ma to przywracamy go z jakąś krótką formułką
+
+- chcialbym miec mozliwosc wyboru wersji jezykowej w moim programie
+
+- chcialbym miec dwa layouty: jasny na dzień i np ciemny na noc
+
+- moze byc, ze layout będzie się ustawiac automatycznie po zalogowaniu
+
+- dobrze by bylo, aby istniał sklep, gdzie moge sprzedaz klientowi plyte/utwor
+
+- kazdy na start dostaje jakas tam kwotę
+
+- profil trzyma informacje o zakupionych plytach/utworach
+
+- klient zalogowany ma dane osobowe i adresowe w bazie, ladujemy automatycznie
+
+- klient niezalogowany musi swoje dane podac
+
+ 
+
+- chcialbym, aby hasla warto zabezpieczyc, czyli nie trzymamy hasel w bazie, a tylko tzw skróty sha1(sha1(haslo))
+
+- chcialbym, aby istniala w opcji jakas mozliwosc wydruku, np kupionych rzeczy albo paragonu
+
+- chcialbym, aby mozna bylo wykonac jakis backup np w ZIPie np plikow uzytkownika lub systemu
+
+- chce miec mozliwoac pracy z roznymi bazami danych, nie wazne czy klient ma mysqla czy postgresa czy sqlite, a moze Mongo?
+
+- chcialbym, aby istnialo dodatkowe okno, a w nim okno, ktore nawiaze kontakt z taka sama aplikacja jak nasza ale na innym komputerze i pozwoli
+
+      na transfer zakupionego utworu/plyty do drugiego uzytkownika, czyli wirtaulna sprzedaz  (czyli kwota, sprzedaz, obrazek utworu)
+
+- chcialbym, aby istnialo demo programu z wylaczonymi opcjami i klucz odblokowujacy 

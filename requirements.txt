@@ -1,0 +1,5 @@
+customtkinter @ git+https://github.com/TomSchimansky/CustomTkinter.git@41f4aae01a54e7be569a313b5df5bbc561c597da
+darkdetect==0.8.0
+packaging==23.2
+protobuf==4.21.12
+tk==0.1.0
