@@ -18,6 +18,6 @@ def logowanie(login, password):
     else:
         print("login error")
 
-logowanie('kaczor', 'pass')
+#logowanie('kaczor','pass')
 #conn.commit()
 db.close()

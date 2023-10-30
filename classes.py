@@ -1,0 +1,1 @@
+#zamierzam zrobić użytkowanika jako object klasy z polami i funkcjami. I dalej operować na odzielnym objekcie.
