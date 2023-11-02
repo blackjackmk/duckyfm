@@ -1,7 +1,7 @@
 import sqlite3
 import hashlib
 
-from classes import Artist
+from classes import Artist, Songs
 
 #database connect
 conn = sqlite3.connect("duckybase.db") #if don't exist - create
@@ -53,6 +53,32 @@ def edit_artist(id, **args):
 #usunięcie twórcy
 def delete_artist(id):
     query = "DELETE FROM tworcy WHERE artist_id = ?"
+    db.execute(query, (id,))
+    conn.commit()
+
+#tworzenie utworu
+def create_song(title, link, artist=None, album=None):
+    song = Songs(title, link, artist, album)
+    song.create()
+
+#edytowanie utworu
+def edit_song(id, **args):
+    query = "SELECT * FROM utwory WHERE song_id = ?"
+    db.execute(query, (id,))
+    result = db.fetchone()
+    song = Songs(result[1], result[2], result[3], result[4], result[5], result[0])
+    fields_to_update = []
+
+    for field, value in args.items():
+        fields_to_update.append(field)
+
+    for field in fields_to_update:
+        song.__setattr__(field, value)
+    song.update()
+
+#usunięcie utworu
+def delete_song(id):
+    query = "DELETE FROM utwory WHERE song_id = ?"
     db.execute(query, (id,))
     conn.commit()
 
