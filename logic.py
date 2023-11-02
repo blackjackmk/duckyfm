@@ -32,7 +32,7 @@ def edit_artist(id, **args):
     db.execute(query, (id,))
     result = db.fetchone()
     artist = Artist(result[1], result[2], result[0])
-    #zmieniamy potrzebne atrybuty objektu
+    #zmieniamy potrzebne pola objektu
     # Definiujemy listę pól, które chcemy zaktualizować.
     fields_to_update = []
 
