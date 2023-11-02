@@ -47,3 +47,24 @@ class Songs:
         query = "UPDATE utwory SET 'title' = ?, 'link' = ?, 'artist' = ?, 'album' = ?, 'status' = ? WHERE song_id = ?"
         db.execute(query, (self.title, self.link, self.artist, self.album, self.status, self.id))
         conn.commit()
+
+class Plyty:
+    def __init__(self, title, description, link, artist, id=None):
+        self.title = title
+        self.description = description
+        self.link = link
+        self.artist = artist
+        self.id = id
+
+    #tworzenie
+    def create(self):
+        query = "INSERT INTO plyty ('title', 'description', 'link', 'artist') VALUES (?, ?, ?, ?)"
+        db.execute(query, (self.title, self.description, self.link, self.artist))
+        conn.commit()
+        self.id = db.lastrowid
+
+    #edytowanie
+    def update(self):
+        query = "UPDATE plyty SET 'title' = ?, 'description' = ?, 'link' = ?, 'artist' = ? WHERE album_id = ?"
+        db.execute(query, (self.title, self.description, self.link, self.artist, self.id))
+        conn.commit()
