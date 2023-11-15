@@ -25,7 +25,7 @@ class Artist:
         conn.commit()
 
 class Songs:
-    def __init__(self, title, link, artist=None, album=None, status="Published", id=None): # is always executed when the class is being initiated
+    def __init__(self, title=None, link=None, artist=None, album=None, status="Published", id=None): # is always executed when the class is being initiated
         self.title = title
         self.link = link
         self.artist = artist

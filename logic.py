@@ -47,7 +47,7 @@ def edit_artist(id, **args):
     #zapisujemy zmiany
     artist.update()
 
-# Zmieniamy opis
+# Zmieniamy opis (musimy podać jaki argument zmienić)
 #edit_artist(1, opis="Nowy opis")
 
 #usunięcie twórcy
@@ -101,6 +101,23 @@ def edit_album(id, **args):
     for field in fields_to_update:
         album.__setattr__(field, value)
     album.update()
+
+
+#przypisanie utworów do płyt
+def songs_to_album(album_id, songs, singer_id = None): #songs to set z id utworów
+    #jeżeli twórca jest podany, to album i wszystkie piosenki będą należały do niego
+    if(singer_id):
+        edit_album(album_id, artist=singer_id)
+    else:
+        #wziąć twórce z albumu
+        # ? co jak album nie ma twórcy ?
+        query = "SELECT artist FROM plyty WHERE album_id = ?"
+        db.execute(query, (album_id,))
+        singer_id = db.fetchone()[0]
+    #dla każdego utworu zmienić pole 'album' na album_id
+    for song in songs:
+        s = Songs(None,None,singer_id,album_id,None,song)
+        s.update()
 
 #usunięcie plyty
 def delete_album(id):
