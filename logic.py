@@ -56,8 +56,14 @@ def delete_artist(id):
     db.execute(query, (id,))
     conn.commit()
 
+#tworzenie relacji twórca-utwór (gdy są więcej niż jeden)
+def song_singer_connect(singer_id,song_id):
+    query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
+    db.execute(query, (singer_id, song_id))
+    conn.commit()
+
 #tworzenie utworu
-def create_song(title, link, artist=None, album=None):
+def create_song(title, link, artist, album=None):
     song = Songs(title, link, artist, album)
     song.create()
 
@@ -101,8 +107,7 @@ def edit_album(id, **args):
     for field in fields_to_update:
         album.__setattr__(field, value)
     album.update()
-
-
+    
 #przypisanie utworów do płyt
 def songs_to_album(album_id, songs, singer_id = None): #songs to set z id utworów
     #jeżeli twórca jest podany, to wszystkie piosenki w albumie będą należały do niego

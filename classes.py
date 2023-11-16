@@ -33,6 +33,12 @@ class Songs:
         self.status = status
         self.id = id
 
+    #tworzenie relacji twórca-utwór
+    def song_singer_connect(self):
+        query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
+        db.execute(query, (self.artist, self.id))
+        conn.commit()
+
     #tworzenie
     def create(self):
         query = "INSERT INTO utwory ('title', 'link', 'artist', 'album', 'created_at') VALUES (?, ?, ?, ?, ?)"
@@ -41,11 +47,16 @@ class Songs:
         db.execute(query, (self.title, self.link, self.artist, self.album, createtime))
         conn.commit()
         self.id = db.lastrowid
+        query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
+        db.execute(query, (self.artist, self.id))
+        conn.commit()
 
     #edytowanie
     def update(self):
         query = "UPDATE utwory SET 'title' = ?, 'link' = ?, 'artist' = ?, 'album' = ?, 'status' = ? WHERE song_id = ?"
         db.execute(query, (self.title, self.link, self.artist, self.album, self.status, self.id))
+        query2 = "UPDATE wykonawcy_utwory SET 'id_wykonawcy' = ?, 'id_utworu' = ?)"
+        db.execute(query2, (self.artist, self.id))
         conn.commit()
 
 class Plyty:
