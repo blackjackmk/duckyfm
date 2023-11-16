@@ -24,3 +24,8 @@ users_table = '''CREATE TABLE users (
     adress TEXT, 
     is_admin INTEGER (1) DEFAULT (0), 
     haslo TEXT NOT NULL);'''
+connect_table = '''CREATE TABLE wykonawcy_albums (
+    connect_id INTEGER PRIMARY KEY AUTOINCREMENT,
+    artist             REFERENCES tworcy (artist_id),
+    album              REFERENCES plyty (album_id) 
+);'''

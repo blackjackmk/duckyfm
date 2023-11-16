@@ -49,11 +49,10 @@ class Songs:
         conn.commit()
 
 class Plyty:
-    def __init__(self, title, description, link, artist, id=None):
+    def __init__(self, title, description, link, id=None):
         self.title = title
         self.description = description
         self.link = link
-        self.artist = artist
         self.id = id
 
     #tworzenie
@@ -65,6 +64,6 @@ class Plyty:
 
     #edytowanie
     def update(self):
-        query = "UPDATE plyty SET 'title' = ?, 'description' = ?, 'link' = ?, 'artist' = ? WHERE album_id = ?"
-        db.execute(query, (self.title, self.description, self.link, self.artist, self.id))
+        query = "UPDATE plyty SET 'title' = ?, 'description' = ?, 'link' = ? WHERE album_id = ?"
+        db.execute(query, (self.title, self.description, self.link, self.id))
         conn.commit()

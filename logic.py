@@ -105,15 +105,7 @@ def edit_album(id, **args):
 
 #przypisanie utworów do płyt
 def songs_to_album(album_id, songs, singer_id = None): #songs to set z id utworów
-    #jeżeli twórca jest podany, to album i wszystkie piosenki będą należały do niego
-    if(singer_id):
-        edit_album(album_id, artist=singer_id)
-    else:
-        #wziąć twórce z albumu
-        # ? co jak album nie ma twórcy ?
-        query = "SELECT artist FROM plyty WHERE album_id = ?"
-        db.execute(query, (album_id,))
-        singer_id = db.fetchone()[0]
+    #jeżeli twórca jest podany, to wszystkie piosenki w albumie będą należały do niego
     #dla każdego utworu zmienić pole 'album' na album_id
     for song in songs:
         s = Songs(None,None,singer_id,album_id,None,song)
