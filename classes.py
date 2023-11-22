@@ -1,9 +1,5 @@
-import sqlite3
 import datetime
-
-#database connect
-conn = sqlite3.connect("duckybase.db") #if don't exist - create
-db = conn.cursor()
+from default_base import db, conn
 
 class Artist:
     def __init__(self, pseudonim, opis, id=None): # is always executed when the class is being initiated
@@ -69,7 +65,7 @@ class Plyty:
     #tworzenie
     def create(self):
         query = "INSERT INTO plyty ('title', 'description', 'link', 'artist') VALUES (?, ?, ?, ?)"
-        db.execute(query, (self.title, self.description, self.link, self.artist))
+        db.execute(query, (self.title, self.description, self.link))
         conn.commit()
         self.id = db.lastrowid
 

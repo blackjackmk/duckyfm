@@ -29,3 +29,21 @@ connect_table = '''CREATE TABLE wykonawcy_utwory (
     id_wykonawcy         REFERENCES tworcy (artist_id) ON DELETE CASCADE,
     id_utworu            REFERENCES utwory (song_id) 
 );'''
+
+import sqlite3
+
+#database connect
+conn = sqlite3.connect("duckybase.db") #if don't exist - create 
+db = conn.cursor()
+
+try:
+    db.execute("SELECT * FROM users") # pozwala sprawdzić czy istnieją tabele, czy stworzona pusta baza
+except sqlite3.OperationalError:
+    #print("Nie ma takiej tabeli")
+    #tworzymy wszystkie tabele
+    db.execute(artist_table)
+    db.execute(utwory_table)
+    db.execute(plyty_table)
+    db.execute(users_table)
+    db.execute(connect_table)
+    #możemy równierz wypełnić ich tutaj domyślnymi wartościami

@@ -1,11 +1,8 @@
-import sqlite3
 import hashlib
 
 from classes import Artist, Songs, Plyty
+from default_base import db, conn
 
-#database connect
-conn = sqlite3.connect("duckybase.db") #if don't exist - create
-db = conn.cursor()
 
 #logowanie
 def logowanie(login, password):
