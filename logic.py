@@ -60,8 +60,8 @@ def song_singer_connect(singer_id,song_id):
     conn.commit()
 
 #tworzenie utworu
-def create_song(title, link, artist, album=None):
-    song = Songs(title, link, artist, album)
+def create_song(title, genre, artist, album=None):
+    song = Songs(title, genre, artist, album)
     song.create()
 
 #edytowanie utworu
@@ -86,8 +86,8 @@ def delete_song(id):
     conn.commit()
 
 #tworzenie plyty
-def create_album(title, description, link, artist):
-    album = Plyty(title, description, link, artist)
+def create_album(title, description, genre, artist):
+    album = Plyty(title, description, genre, artist)
     album.create()
 
 #edytowanie plyty

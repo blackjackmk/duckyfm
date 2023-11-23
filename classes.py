@@ -21,9 +21,9 @@ class Artist:
         conn.commit()
 
 class Songs:
-    def __init__(self, title=None, link=None, artist=None, album=None, status="Published", id=None): # is always executed when the class is being initiated
+    def __init__(self, title=None, genre=None, artist=None, album=None, status="Published", id=None): # is always executed when the class is being initiated
         self.title = title
-        self.link = link
+        self.genre = genre
         self.artist = artist
         self.album = album
         self.status = status
@@ -37,10 +37,10 @@ class Songs:
 
     #tworzenie
     def create(self):
-        query = "INSERT INTO utwory ('title', 'link', 'artist', 'album', 'created_at') VALUES (?, ?, ?, ?, ?)"
+        query = "INSERT INTO utwory ('title', 'genre', 'artist', 'album', 'created_at') VALUES (?, ?, ?, ?, ?)"
         teraz = datetime.datetime.now()
         createtime = teraz.strftime("%Y-%m-%d %H:%M:%S")
-        db.execute(query, (self.title, self.link, self.artist, self.album, createtime))
+        db.execute(query, (self.title, self.genre, self.artist, self.album, createtime))
         conn.commit()
         self.id = db.lastrowid
         query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
@@ -49,28 +49,28 @@ class Songs:
 
     #edytowanie
     def update(self):
-        query = "UPDATE utwory SET 'title' = ?, 'link' = ?, 'artist' = ?, 'album' = ?, 'status' = ? WHERE song_id = ?"
-        db.execute(query, (self.title, self.link, self.artist, self.album, self.status, self.id))
+        query = "UPDATE utwory SET 'title' = ?, 'genre' = ?, 'artist' = ?, 'album' = ?, 'status' = ? WHERE song_id = ?"
+        db.execute(query, (self.title, self.genre, self.artist, self.album, self.status, self.id))
         query2 = "UPDATE wykonawcy_utwory SET 'id_wykonawcy' = ?, 'id_utworu' = ?)"
         db.execute(query2, (self.artist, self.id))
         conn.commit()
 
 class Plyty:
-    def __init__(self, title, description, link, id=None):
+    def __init__(self, title, description, genre, id=None):
         self.title = title
         self.description = description
-        self.link = link
+        self.genre = genre
         self.id = id
 
     #tworzenie
     def create(self):
-        query = "INSERT INTO plyty ('title', 'description', 'link', 'artist') VALUES (?, ?, ?, ?)"
-        db.execute(query, (self.title, self.description, self.link))
+        query = "INSERT INTO plyty ('title', 'description', 'genre', 'artist') VALUES (?, ?, ?, ?)"
+        db.execute(query, (self.title, self.description, self.genre))
         conn.commit()
         self.id = db.lastrowid
 
     #edytowanie
     def update(self):
-        query = "UPDATE plyty SET 'title' = ?, 'description' = ?, 'link' = ? WHERE album_id = ?"
-        db.execute(query, (self.title, self.description, self.link, self.id))
+        query = "UPDATE plyty SET 'title' = ?, 'description' = ?, 'genre' = ? WHERE album_id = ?"
+        db.execute(query, (self.title, self.description, self.genre, self.id))
         conn.commit()
