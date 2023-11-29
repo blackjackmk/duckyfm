@@ -74,3 +74,28 @@ class Plyty:
         query = "UPDATE plyty SET 'title' = ?, 'description' = ?, 'genre' = ? WHERE album_id = ?"
         db.execute(query, (self.title, self.description, self.genre, self.id))
         conn.commit()
+
+class User:
+    def __init__(self, username, is_admin, email, id=None):
+        self.username = username
+        self.is_admin = False
+        self.email = email
+        self.id = id
+
+    owned_albums = {}
+    liked_songs = {}
+
+def only_admin(func):
+    def wrapper(*args, **kwargs):
+        if not isinstance(current_user, Admin):#gdy nie jest objektem klasy
+            raise PermissionError("Brak dostępu. Zaloguj się jako admin.")
+        return func(*args, **kwargs)
+    return wrapper
+
+class Admin(User):
+    def __init__(self, username, email):
+        super().__init__(username, True, email)
+
+
+    
+    
