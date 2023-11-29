@@ -76,10 +76,9 @@ class Plyty:
         conn.commit()
 
 class User:
-    def __init__(self, username, is_admin, email, id=None):
+    def __init__(self, username, is_admin, id=None):
         self.username = username
         self.is_admin = False
-        self.email = email
         self.id = id
 
     owned_albums = {}

@@ -1,5 +1,3 @@
-import hashlib
-
 from classes import Artist, Songs, Plyty
 from classes import only_admin
 from default_base import db, conn
