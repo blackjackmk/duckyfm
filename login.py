@@ -34,7 +34,7 @@ def rejestracja(username, name, surname, haslo, haslo2):
         return False
     #pierwszy zarejestrowany uzytkownik staje sie administratorem systemu
     db.execute("SELECT * FROM users")
-    results = cursor.fetchone()
+    results = db.fetchone()
     if results is None:
         is_admin = 1
     else:
@@ -46,7 +46,7 @@ def rejestracja(username, name, surname, haslo, haslo2):
     haslo_zaszyfrowane = hash.hexdigest()
     db.execute(query, (username, name, surname, is_admin, haslo_zaszyfrowane))
 
-rejestracja("testman", "Tester", "Maksym", "test123", "test123")
+#rejestracja("testman", "Tester", "Maksym", "test123", "test123")
 
 while (CurrentUser == None):
     login = input("Podaj login: ")
