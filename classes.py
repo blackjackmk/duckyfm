@@ -92,8 +92,8 @@ def only_admin(func):
     return wrapper
 
 class Admin(User):
-    def __init__(self, username, email):
-        super().__init__(username, True, email)
+    def __init__(self, username, is_admin):
+        super().__init__(username, True)
 
 
     
