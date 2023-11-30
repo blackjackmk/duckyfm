@@ -23,12 +23,12 @@ def logowanie(login, password):
     else:
         print("login error")
 
-def rejestracja(username, name, surname, haslo, haslo2):
+def rejestracja(username, name, surname, email, haslo, haslo2):
     #sprawdzamy wszystkie warunki
-    #regex = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-    #if (re.match(regex, email) == False):
-    #    print("Podaj poprawny email")
-    #    return False
+    regex = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
+    if (re.match(regex, email) == False):
+        print("Podaj poprawny email")
+        return False
     if (haslo != haslo2):
         print("Hasła nie zgadzają się")
         return False
@@ -40,11 +40,11 @@ def rejestracja(username, name, surname, haslo, haslo2):
     else:
         is_admin = 0
     #wpisujemy użytkownika w bazie
-    query = "INSERT INTO users ('username', 'name', 'surname', 'is_admin', 'haslo') VALUES (?, ?, ?, ?, ?)"
+    query = "INSERT INTO users ('username', 'name', 'surname', 'email', 'is_admin', 'haslo') VALUES (?, ?, ?, ?, ?, ?)"
     hash = hashlib.sha256()
     hash.update(haslo.encode())
     haslo_zaszyfrowane = hash.hexdigest()
-    db.execute(query, (username, name, surname, is_admin, haslo_zaszyfrowane))
+    db.execute(query, (username, name, surname, email, is_admin, haslo_zaszyfrowane))
 
 #rejestracja("testman", "Tester", "Maksym", "test123", "test123")
 

@@ -21,6 +21,7 @@ users_table = '''CREATE TABLE users (
     username TEXT (30), 
     name TEXT (60), 
     surname TEXT (80), 
+    email TEXT (40),
     adress TEXT, 
     is_admin INTEGER (1) DEFAULT (0), 
     haslo TEXT NOT NULL);'''
