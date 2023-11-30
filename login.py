@@ -46,6 +46,7 @@ def rejestracja(username, name, surname, haslo, haslo2):
     haslo_zaszyfrowane = hash.hexdigest()
     db.execute(query, (username, name, surname, is_admin, haslo_zaszyfrowane))
 
+rejestracja("testman", "Tester", "Maksym", "test123", "test123")
 
 while (CurrentUser == None):
     login = input("Podaj login: ")
