@@ -52,7 +52,7 @@ def song_singer_connect(singer_id,song_id):
 @only_admin
 def create_song(title, genre, artist, album=None):
     song = Songs(title, genre, artist, album)
-    song.create()
+    song.create() #relacja tworzy się automatycznie w klasie
 
 #edytowanie utworu
 @only_admin

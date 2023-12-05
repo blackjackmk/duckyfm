@@ -30,12 +30,6 @@ class Songs:
         self.status = status
         self.id = id
 
-    #tworzenie relacji twórca-utwór
-    def song_singer_connect(self):
-        query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
-        db.execute(query, (self.artist, self.id))
-        conn.commit()
-
     #tworzenie
     def create(self):
         query = "INSERT INTO utwory ('title', 'genre', 'artist', 'album', 'created_at') VALUES (?, ?, ?, ?, ?)"
