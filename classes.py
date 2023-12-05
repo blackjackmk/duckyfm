@@ -95,6 +95,11 @@ class Admin(User):
     def __init__(self, username, is_admin):
         super().__init__(username, True)
 
+    def awans(self, new_admin_id):
+        query = "UPDATE users SET 'is_admin' = 1 WHERE user_id = ?"
+        db.execute(query, (new_admin_id,))
+        conn.commit()
+
 
     
     

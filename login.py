@@ -17,9 +17,9 @@ def logowanie(login, password):
     if szyfred == result[3]:
         print("login success")
         if result[2] == 0:
-            CurrentUser = User(result[0], False, result[1])
+            CurrentUser = User(result[0], False, result[1]) #zwykły użytkownik
         else:
-            CurrentUser = Admin(result[0], result[1])
+            CurrentUser = Admin(result[0], result[1]) #użytkownik z uprawnieniami admina
     else:
         print("login error")
 
