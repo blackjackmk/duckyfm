@@ -4,8 +4,6 @@ import re
 from default_base import db, conn
 from classes import User, Admin
 
-CurrentUser = None
-
 #logowanie
 def logowanie(login, password):
     query = "SELECT username, user_id, is_admin, haslo FROM users WHERE username = ?"
@@ -13,6 +11,7 @@ def logowanie(login, password):
     result = db.fetchone()
     hash = hashlib.sha256()
     hash.update(password.encode())
+    global CurrentUser
     szyfred = hash.hexdigest()  #zaszyfrowane hasło
     if szyfred == result[3]:
         print("login success")

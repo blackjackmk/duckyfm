@@ -1,5 +1,6 @@
 import datetime
 from default_base import db, conn
+from login import CurrentUser
 
 class Artist:
     def __init__(self, pseudonim, opis, id=None): # is always executed when the class is being initiated
@@ -86,7 +87,7 @@ class User:
 
 def only_admin(func):
     def wrapper(*args, **kwargs):
-        if not isinstance(current_user, Admin):#gdy nie jest objektem klasy
+        if not isinstance(CurrentUser, Admin):#gdy nie jest objektem klasy
             raise PermissionError("Brak dostępu. Zaloguj się jako admin.")
         return func(*args, **kwargs)
     return wrapper
@@ -98,6 +99,36 @@ class Admin(User):
     def awans(self, new_admin_id):
         query = "UPDATE users SET 'is_admin' = 1 WHERE user_id = ?"
         db.execute(query, (new_admin_id,))
+        conn.commit()
+
+    def delete_other_admin(self, admin_to_fire):
+        #tylko admin może usunąć innego admina
+        db.execute("SELECT * FROM users WHERE is_admin = 1 ORDER BY user_id ASC")
+        results = db.fetchone()
+        if results[0] == admin_to_fire:
+            #nie można usunąć pierwszego admina
+            return False
+        else:
+            query = "UPDATE users SET 'is_admin' = 0 WHERE user_id = ?"
+            db.execute(query, (admin_to_fire,))
+        
+
+    def resignation(self):
+        #moze sam zrezygnowac, ale uwaga: musi wskazac kogos innego z listy
+        zastepca = input("Podaj id swojego zastępcy: ")
+        #check is user exist
+        db.execute('SELECT COUNT(*) AS user_count FROM users WHERE user_id = ?', (zastepca,))
+        result = db.fetchone()
+
+        if result[0] > 0:
+            #exist
+            query = "UPDATE users SET 'is_admin' = 1 WHERE user_id = ?"
+            db.execute(query, (zastepca,))
+            query = "UPDATE users SET 'is_admin' = 0 WHERE user_id = ?"
+            db.execute(query, (self.id,))
+        else:
+            #doesn't exist
+            print("Taki id nie istnieje")
         conn.commit()
 
 
