@@ -3,19 +3,23 @@ artist_table = '''CREATE TABLE tworcy (
     pseudonim   TEXT (25),
     description TEXT (50) );'''
 utwory_table = '''CREATE TABLE utwory (
-    song_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT (30), 
-    genre TEXT, 
-    artist INTEGER, 
-    album INTEGER, 
-    status TEXT DEFAULT Published, 
-    created_at DATE);'''
+    song_id    INTEGER   PRIMARY KEY AUTOINCREMENT,
+    title      TEXT (30),
+    genre      INTEGER   REFERENCES genre (id_genre) ON UPDATE CASCADE,
+    artist     INTEGER   REFERENCES tworcy (artist_id) ON DELETE CASCADE
+                                                       ON UPDATE CASCADE,
+    album                REFERENCES plyty (album_id) ON DELETE CASCADE
+                                                     ON UPDATE CASCADE,
+    status     TEXT      DEFAULT Published,
+    created_at DATE
+);
+'''
 plyty_table = '''CREATE TABLE plyty (
-    album_id INTEGER PRIMARY KEY AUTOINCREMENT,
-    title TEXT (30),
+    album_id    INTEGER   PRIMARY KEY AUTOINCREMENT,
+    title       TEXT (30),
     description TEXT (60),
-    genre TEXT,
-    artist REFERENCES tworcy (artist_id) ON DELETE CASCADE ON UPDATE CASCADE);'''
+    genre       INTEGER   REFERENCES genre (id_genre) ON UPDATE CASCADE
+);'''
 users_table = '''CREATE TABLE users (
     user_id INTEGER PRIMARY KEY AUTOINCREMENT UNIQUE NOT NULL, 
     username TEXT (30), 
@@ -25,6 +29,11 @@ users_table = '''CREATE TABLE users (
     adress TEXT, 
     is_admin INTEGER (1) DEFAULT (0), 
     haslo TEXT NOT NULL);'''
+genre = '''CREATE TABLE genre (
+    id_genre INTEGER PRIMARY KEY AUTOINCREMENT,
+    title    TEXT    NOT NULL
+                     UNIQUE
+);'''
 connect_table = '''CREATE TABLE wykonawcy_utwory (
     connect_id   INTEGER PRIMARY KEY AUTOINCREMENT,
     id_wykonawcy         REFERENCES tworcy (artist_id) ON DELETE CASCADE,
@@ -42,6 +51,7 @@ try:
 except sqlite3.OperationalError:
     #print("Nie ma takiej tabeli")
     #tworzymy wszystkie tabele
+    db.execute(genre)
     db.execute(artist_table)
     db.execute(utwory_table)
     db.execute(plyty_table)
