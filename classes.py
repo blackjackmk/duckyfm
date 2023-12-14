@@ -1,6 +1,6 @@
 import datetime
 from default_base import db, conn
-from login import CurrentUser
+#from login import CurrentUser
 
 class Artist:
     def __init__(self, pseudonim, opis, id=None): # is always executed when the class is being initiated

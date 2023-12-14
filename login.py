@@ -39,16 +39,17 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
     else:
         is_admin = 0
     #wpisujemy użytkownika w bazie
-    query = "INSERT INTO users ('username', 'name', 'surname', 'email', 'is_admin', 'haslo') VALUES (?, ?, ?, ?, ?, ?)"
+    query = "INSERT INTO users (username, name, surname, email, is_admin, haslo) VALUES (?, ?, ?, ?, ?, ?)"
     hash = hashlib.sha256()
     hash.update(haslo.encode())
     haslo_zaszyfrowane = hash.hexdigest()
     db.execute(query, (username, name, surname, email, is_admin, haslo_zaszyfrowane))
+    conn.commit()
 
-#rejestracja("testman", "Tester", "Maksym", "test123", "test123")
+rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")
 
-while (CurrentUser == None):
-    login = input("Podaj login: ")
-    password = input("Podaj haslo: ")
-    logowanie(login, password)
+#while (CurrentUser == None):
+#    login = input("Podaj login: ")
+#    password = input("Podaj haslo: ")
+#    logowanie(login, password)
 
