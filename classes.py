@@ -1,6 +1,6 @@
 import datetime
 from default_base import db, conn
-#from login import CurrentUser
+global CurrentUser
 
 class Artist:
     def __init__(self, pseudonim, opis, id=None): # is always executed when the class is being initiated
@@ -10,14 +10,14 @@ class Artist:
 
     #tworzenie
     def create(self):
-        query = "INSERT INTO tworcy ('pseudonim', 'description') VALUES (?, ?)"
+        query = "INSERT INTO tworcy (pseudonim, description) VALUES (?, ?)"
         db.execute(query, (self.pseudonim, self.opis))
         conn.commit()
         self.id = db.lastrowid
 
     #edytowanie
     def update(self):
-        query = "UPDATE tworcy SET 'pseudonim' = ?, 'description' = ? WHERE artist_id = ?"
+        query = "UPDATE tworcy SET pseudonim = ?, description = ? WHERE artist_id = ?"
         db.execute(query, (self.pseudonim, self.opis, self.id))
         conn.commit()
 
@@ -32,7 +32,7 @@ class Songs:
 
     #tworzenie
     def create(self):
-        query = "INSERT INTO utwory ('title', 'genre', 'artist', 'album', 'created_at') VALUES (?, ?, ?, ?, ?)"
+        query = "INSERT INTO utwory (title, genre, artist, album, created_at) VALUES (?, ?, ?, ?, ?)"
         teraz = datetime.datetime.now()
         createtime = teraz.strftime("%Y-%m-%d %H:%M:%S")
         db.execute(query, (self.title, self.genre, self.artist, self.album, createtime))
@@ -44,9 +44,9 @@ class Songs:
 
     #edytowanie
     def update(self):
-        query = "UPDATE utwory SET 'title' = ?, 'genre' = ?, 'artist' = ?, 'album' = ?, 'status' = ? WHERE song_id = ?"
+        query = "UPDATE utwory SET title = ?, genre = ?, artist = ?, album = ?, status = ? WHERE song_id = ?"
         db.execute(query, (self.title, self.genre, self.artist, self.album, self.status, self.id))
-        query2 = "UPDATE wykonawcy_utwory SET 'id_wykonawcy' = ?, 'id_utworu' = ?)"
+        query2 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ?, id_utworu = ?)"
         db.execute(query2, (self.artist, self.id))
         conn.commit()
 
@@ -59,14 +59,14 @@ class Plyty:
 
     #tworzenie
     def create(self):
-        query = "INSERT INTO plyty ('title', 'description', 'genre', 'artist') VALUES (?, ?, ?, ?)"
+        query = "INSERT INTO plyty (title, description, genre, artist) VALUES (?, ?, ?, ?)"
         db.execute(query, (self.title, self.description, self.genre))
         conn.commit()
         self.id = db.lastrowid
 
     #edytowanie
     def update(self):
-        query = "UPDATE plyty SET 'title' = ?, 'description' = ?, 'genre' = ? WHERE album_id = ?"
+        query = "UPDATE plyty SET title = ?, description = ?, genre = ? WHERE album_id = ?"
         db.execute(query, (self.title, self.description, self.genre, self.id))
         conn.commit()
 
@@ -91,7 +91,7 @@ class Admin(User):
         super().__init__(username, True)
 
     def awans(self, new_admin_id):
-        query = "UPDATE users SET 'is_admin' = 1 WHERE user_id = ?"
+        query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
         db.execute(query, (new_admin_id,))
         conn.commit()
 
@@ -103,7 +103,7 @@ class Admin(User):
             #nie można usunąć pierwszego admina
             return False
         else:
-            query = "UPDATE users SET 'is_admin' = 0 WHERE user_id = ?"
+            query = "UPDATE users SET is_admin = 0 WHERE user_id = ?"
             db.execute(query, (admin_to_fire,))
         
 
@@ -116,9 +116,9 @@ class Admin(User):
 
         if result[0] > 0:
             #exist
-            query = "UPDATE users SET 'is_admin' = 1 WHERE user_id = ?"
+            query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
             db.execute(query, (zastepca,))
-            query = "UPDATE users SET 'is_admin' = 0 WHERE user_id = ?"
+            query = "UPDATE users SET is_admin = 0 WHERE user_id = ?"
             db.execute(query, (self.id,))
         else:
             #doesn't exist
