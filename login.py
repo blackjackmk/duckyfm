@@ -38,14 +38,22 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
         is_admin = 1
     else:
         is_admin = 0
+    #sprawdzamy czu user o takim username istnieje
+    db.execute("SELECT * FROM users WHERE username = ?", username)
+    results = db.fetchone()
+    if results is None:
+        pass
+    else:
+        raise Exception("Taki user już istnieje")
     #wpisujemy użytkownika w bazie
-    query = "INSERT INTO users ('username', 'name', 'surname', 'email', 'is_admin', 'haslo') VALUES (?, ?, ?, ?, ?, ?)"
+    query = "INSERT INTO users (username, name, surname, email, is_admin, haslo) VALUES (?, ?, ?, ?, ?, ?)"
     hash = hashlib.sha256()
     hash.update(haslo.encode())
     haslo_zaszyfrowane = hash.hexdigest()
     db.execute(query, (username, name, surname, email, is_admin, haslo_zaszyfrowane))
+    conn.commit()
 
-#rejestracja("testman", "Tester", "Maksym", "test123", "test123")
+#rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")
 
 while (CurrentUser == None):
     login = input("Podaj login: ")
