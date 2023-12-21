@@ -13,14 +13,14 @@ def logowanie(login, password):
     hash.update(password.encode())
     global CurrentUser
     szyfred = hash.hexdigest()  #zaszyfrowane hasło
-    if szyfred == result[3]:
-        print("login success")
-        if result[2] == 0:
-            CurrentUser = User(result[0], False, result[1]) #zwykły użytkownik
+    if szyfred == result.haslo:
+        if result.is_admin == 0:
+            CurrentUser = User(result.username, False, result.user_id) #zwykły użytkownik
         else:
-            CurrentUser = Admin(result[0], result[1]) #użytkownik z uprawnieniami admina
+            CurrentUser = Admin(result.username, result.user_id) #użytkownik z uprawnieniami admina
+        return CurrentUser
     else:
-        print("login error")
+        return None
 
 def rejestracja(username, name, surname, email, haslo, haslo2):
     #sprawdzamy wszystkie warunki
