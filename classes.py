@@ -71,13 +71,39 @@ class Plyty:
         conn.commit()
 
 class User:
-    def __init__(self, username, is_admin, id=None):
+    def __init__(self, username, is_admin, id):
         self.username = username
         self.is_admin = False
         self.id = id
+        #przy tworzeniu potrzebujemy pobrać z bazy ulubione utwory i albumy
+        self.get_liked_albums()
+        self.get_liked_songs()
+    
+    liked_albums = ()
+    def get_liked_albums(self):
+        query = "SELECT id_album FROM ulubione_plyty WHERE id_usera = ?"
+        db.execute(query, self.id)
+        rows = db.fetchall()
+        for row in rows:
+            self.liked_albums.append(row.id_album)
+    def like_album(self, album_id):
+        self.liked_albums.append(album_id)
+    def dislike_album(self, album_id):
+        self.liked_albums.remove(album_id)
 
-    owned_albums = {}
-    liked_songs = {}
+    liked_songs = ()
+    def get_liked_songs(self):
+        query = "SELECT id_utworu FROM ulubione_utwory WHERE id_usera = ?"
+        db.execute(query, self.id)
+        rows = db.fetchall()
+        for row in rows:
+            self.liked_songs.append(row.id_album)
+    def like_song(self, song_id):
+        self.liked_songs.append(song_id)
+    def dislike_album(self, song_id):
+        self.liked_songs.remove(song_id)
+    #w którymś momencie potrzebujemy wprowadzić te zmiany do bazy
+        
 
 def only_admin(func):
     def wrapper(*args, **kwargs):
