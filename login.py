@@ -4,6 +4,8 @@ import re
 from default_base import db, conn
 from classes import User, Admin
 
+global CurrentUser
+CurrentUser = None
 #logowanie
 def logowanie(login, password):
     query = "SELECT username, user_id, is_admin, haslo FROM users WHERE username = ?"
@@ -13,11 +15,11 @@ def logowanie(login, password):
     hash.update(password.encode())
     global CurrentUser
     szyfred = hash.hexdigest()  #zaszyfrowane hasło
-    if szyfred == result.haslo:
-        if result.is_admin == 0:
-            CurrentUser = User(result.username, False, result.user_id) #zwykły użytkownik
+    if szyfred == result['haslo']:
+        if result['is_admin'] == 0:
+            CurrentUser = User(result['username'], False, result['user_id']) #zwykły użytkownik
         else:
-            CurrentUser = Admin(result.username, result.user_id) #użytkownik z uprawnieniami admina
+            CurrentUser = Admin(result['username'], True,  result['user_id']) #użytkownik z uprawnieniami admina
         return CurrentUser
     else:
         return None

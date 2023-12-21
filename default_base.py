@@ -52,8 +52,8 @@ import pypyodbc as odbc
 from credential import db_login, db_pass, db_name, server_name
 
 conn = odbc.connect(
-  SERVER=server_name,
-  DATABASE=db_name,
+  SERVER = server_name,
+  DATABASE = db_name,
   UID = db_login,
   PWD = db_pass,
   DRIVER='{ODBC Driver 18 for SQL Server}',

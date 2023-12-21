@@ -82,7 +82,7 @@ class User:
     liked_albums = ()
     def get_liked_albums(self):
         query = "SELECT id_album FROM ulubione_plyty WHERE id_usera = ?"
-        db.execute(query, self.id)
+        db.execute(query, (self.id,))
         rows = db.fetchall()
         for row in rows:
             self.liked_albums.append(row.id_album)
@@ -94,7 +94,7 @@ class User:
     liked_songs = ()
     def get_liked_songs(self):
         query = "SELECT id_utworu FROM ulubione_utwory WHERE id_usera = ?"
-        db.execute(query, self.id)
+        db.execute(query, (self.id,))
         rows = db.fetchall()
         for row in rows:
             self.liked_songs.append(row.id_album)
@@ -106,11 +106,11 @@ class User:
     def update_favourite(self):
         # Remove all of the existing liked songs for the user
         query = "DELETE FROM ulubione_utwory WHERE id_usera = ?"
-        db.execute(query, self.id)
+        db.execute(query, (self.id,))
 
         # Remove all of the existing liked albums for the user
         query = "DELETE FROM ulubione_plyty WHERE id_usera = ?"
-        db.execute(query, self.id)
+        db.execute(query, (self.id,))
 
         # Insert the new list of liked songs into the database
         for song_id in self.liked_songs:
@@ -134,8 +134,8 @@ def only_admin(func):
     return wrapper
 
 class Admin(User):
-    def __init__(self, username, is_admin):
-        super().__init__(username, True)
+    def __init__(self, username, is_admin, id):
+        super().__init__(username, True, id)
 
     def awans(self, new_admin_id):
         query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
@@ -154,7 +154,6 @@ class Admin(User):
             db.execute(query, (admin_to_fire,))
         conn.commit()
         
-
     def resignation(self):
         #moze sam zrezygnowac, ale uwaga: musi wskazac kogos innego z listy
         zastepca = input("Podaj id swojego zastępcy: ")
