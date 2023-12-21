@@ -37,13 +37,23 @@ wykonawcy_utwory = '''CREATE TABLE wykonawcy_utwory (
     id_wykonawcy        INT REFERENCES tworcy (artist_id) ON DELETE CASCADE,
     id_utworu           INT REFERENCES utwory (song_id) 
 );'''
+ulubione_utwory = '''CREATE TABLE ulubione_utwory (
+    connect_id   INT IDENTITY PRIMARY KEY,
+    id_usera       INT REFERENCES users (user_id) ON DELETE CASCADE,
+    id_utworu           INT REFERENCES utwory (song_id) 
+);'''
+ulubione_plyty = '''CREATE TABLE ulubione_plyty (
+    connect_id   INT IDENTITY PRIMARY KEY,
+    id_usera        INT REFERENCES users (user_id) ON DELETE CASCADE,
+    id_album          INT REFERENCES plyty (album_id) 
+);'''
 
 import pypyodbc as odbc
-from credential import db_login, db_pass
+from credential import db_login, db_pass, db_name, server_name
 
 conn = odbc.connect(
-  SERVER="duckybase.database.windows.net",
-  DATABASE="DuckyBase",
+  SERVER=server_name,
+  DATABASE=db_name,
   UID = db_login,
   PWD = db_pass,
   DRIVER='{ODBC Driver 18 for SQL Server}',
@@ -64,4 +74,6 @@ except odbc.ProgrammingError:
     db.execute(plyty_table)
     db.execute(utwory_table)
     db.execute(wykonawcy_utwory)
+    db.execute(ulubione_utwory)
+    db.execute(ulubione_plyty)
     conn.commit()
