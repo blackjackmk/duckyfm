@@ -102,6 +102,27 @@ class User:
         self.liked_songs.append(song_id)
     def dislike_album(self, song_id):
         self.liked_songs.remove(song_id)
+
+    def update_favourite(self):
+        # Remove all of the existing liked songs for the user
+        query = "DELETE FROM ulubione_utwory WHERE id_usera = ?"
+        db.execute(query, self.id)
+
+        # Remove all of the existing liked albums for the user
+        query = "DELETE FROM ulubione_plyty WHERE id_usera = ?"
+        db.execute(query, self.id)
+
+        # Insert the new list of liked songs into the database
+        for song_id in self.liked_songs:
+            query = "INSERT INTO ulubione_utwory (id_usera, id_utworu) VALUES (?, ?)"
+            db.execute(query, (self.id, song_id))
+
+        # Insert the new list of liked albums into the database
+        for album_id in self.liked_albums:
+            query = "INSERT INTO ulubione_plyty (id_usera, id_album) VALUES (?, ?)"
+            db.execute(query, (self.id, album_id))
+
+        db.commit()
     #w którymś momencie potrzebujemy wprowadzić te zmiany do bazy
         
 
@@ -123,7 +144,7 @@ class Admin(User):
 
     def delete_other_admin(self, admin_to_fire):
         #tylko admin może usunąć innego admina
-        db.execute("SELECT * FROM users WHERE is_admin = 1 ORDER BY user_id ASC")
+        db.execute("SELECT user_id FROM users WHERE is_admin = 1 ORDER BY user_id ASC")
         results = db.fetchone()
         if results[0] == admin_to_fire:
             #nie można usunąć pierwszego admina
@@ -131,6 +152,7 @@ class Admin(User):
         else:
             query = "UPDATE users SET is_admin = 0 WHERE user_id = ?"
             db.execute(query, (admin_to_fire,))
+        conn.commit()
         
 
     def resignation(self):
