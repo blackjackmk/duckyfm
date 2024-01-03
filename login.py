@@ -50,5 +50,3 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
     haslo_zaszyfrowane = hash.hexdigest()
     db.execute(query, (username, name, surname, email, is_admin, haslo_zaszyfrowane))
     conn.commit()
-
-#rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")

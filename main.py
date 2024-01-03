@@ -12,17 +12,26 @@ from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
 
+global CurrentUser
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
     
         self.ui = Ui_MainWindow()
         self.ui.setupUi(self)
-
+        #sidebar
         self.ui.sidebar_full.hide()
         self.ui.stackedWidget.setCurrentIndex(0) #home window
         self.ui.home.setChecked(True)
-
+        #hide admin
+        self.ui.addmin.hide()
+        self.ui.addmin_2.hide()
+        
+    def show_admin(self):
+        if CurrentUser.is_admin:
+            self.ui.addmin.show()
+            self.ui.addmin_2.show() 
     #może zrobić to enum'em
     #[home, library, liked, admin, search, user, cart]
 
@@ -60,12 +69,9 @@ class MainWindow(QMainWindow):
     def on_profile_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(5)
 
-    def on_cart_clicked(self):
-        self.ui.stackedWidget.setCurrentIndex(6)
 
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
-
     def __init__(self):
         super(LoginScreen, self).__init__()
         
@@ -120,14 +126,13 @@ if __name__ == "__main__":
     if os.path.isfile("dzika_szyszka.jpg"):
         app = QApplication(sys.argv)
 
-        window = MainWindow()
         login_window = LoginScreen()
         register_window = RegisterScreen()
+        window = MainWindow()
 
-        login_window.successful_login.connect(window.show)
         
-        global CurrentUser
-        CurrentUser = None
+        login_window.successful_login.connect(window.show)
+        login_window.successful_login.connect(window.show_admin)
         login_window.show()
         sys.exit(app.exec_())
     

@@ -73,7 +73,7 @@ class Plyty:
 class User:
     def __init__(self, username, is_admin, id):
         self.username = username
-        self.is_admin = False
+        self.is_admin = is_admin
         self.id = id
         #przy tworzeniu potrzebujemy pobrać z bazy ulubione utwory i albumy
         self.get_liked_albums()
@@ -135,7 +135,7 @@ def only_admin(func):
 
 class Admin(User):
     def __init__(self, username, is_admin, id):
-        super().__init__(username, True, id)
+        super().__init__(username, is_admin, id)
 
     def awans(self, new_admin_id):
         query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
