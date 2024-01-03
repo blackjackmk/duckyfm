@@ -10,6 +10,8 @@ from mainscreen_ui import Ui_MainWindow
 from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
+from login import logowanie, rejestracja
+
 class MainWindow(QMainWindow):
     def __init__(self):
         super(MainWindow, self).__init__()
@@ -73,9 +75,15 @@ class LoginScreen(QDialog):
     def on_login_btn_clicked(self):
         username = self.ui.login.text() 
         password = self.ui.password.text()
-        self.successful_login.emit()
-        #window.show()
-        self.close()
+        #!check is not empty
+        global CurrentUser
+        CurrentUser = logowanie(username, password)
+        if CurrentUser:
+            self.successful_login.emit()
+            #window.show()
+            self.close()
+        else:
+            self.ui.error.setText("Login error")
 
     def on_register_btn_clicked(self):
         register_window.show()
@@ -90,6 +98,7 @@ class RegisterScreen(QDialog):
         self.ui.setupUi(self)
 
     def on_register_btn_clicked(self):
+        #rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")
         login_window.show()
         self.close()
 
@@ -106,7 +115,9 @@ if __name__ == "__main__":
         register_window = RegisterScreen()
 
         login_window.successful_login.connect(window.show)
-
+        
+        global CurrentUser
+        CurrentUser = None
         login_window.show()
         sys.exit(app.exec_())
     
