@@ -4,6 +4,7 @@ import re
 from default_base import db, conn
 from classes import User, Admin
 
+
 #logowanie
 def logowanie(login, password):
     query = "SELECT username, user_id, is_admin, haslo FROM users WHERE username = ?"
@@ -54,7 +55,8 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
     conn.commit()
 
 #rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")
-
+global CurrentUser
+CurrentUser = None
 while (CurrentUser == None):
     login = input("Podaj login: ")
     password = input("Podaj haslo: ")
