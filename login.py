@@ -25,12 +25,10 @@ def logowanie(login, password):
 def rejestracja(username, name, surname, email, haslo, haslo2):
     #sprawdzamy wszystkie warunki
     regex = r"^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$"
-    if (re.match(regex, email) == False):
-        print("Podaj poprawny email")
-        return False
+    if (re.match(regex, email) == None):
+        raise ValueError("Podaj poprawny email")
     if (haslo != haslo2):
-        print("Hasła nie zgadzają się")
-        return False
+        raise ValueError("Hasła nie zgadzają się")
     #pierwszy zarejestrowany uzytkownik staje sie administratorem systemu
     db.execute("SELECT * FROM users")
     results = db.fetchone()
@@ -39,12 +37,12 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
     else:
         is_admin = 0
     #sprawdzamy czu user o takim username istnieje
-    db.execute("SELECT * FROM users WHERE username = ?", username)
+    db.execute("SELECT * FROM users WHERE username = ?", (username,))
     results = db.fetchone()
     if results is None:
         pass
     else:
-        raise Exception("Taki user już istnieje")
+        raise ValueError("Taki user już istnieje")
     #wpisujemy użytkownika w bazie
     query = "INSERT INTO users (username, name, surname, email, is_admin, haslo) VALUES (?, ?, ?, ?, ?, ?)"
     hash = hashlib.sha256()

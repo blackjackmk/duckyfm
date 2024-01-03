@@ -28,8 +28,8 @@
         <string/>
        </property>
        <property name="icon">
-        <iconset>
-         <normaloff>icomoon/cross.svg</normaloff>icomoon/cross.svg</iconset>
+        <iconset resource="resource.qrc">
+         <normaloff>:/icon/icomoon/cross.svg</normaloff>:/icon/icomoon/cross.svg</iconset>
        </property>
       </widget>
      </item>
@@ -74,10 +74,10 @@ color: black;
 padding-bottom:7px;</string>
      </property>
      <property name="text">
-      <string>Name</string>
+      <string/>
      </property>
      <property name="placeholderText">
-      <string>User Name</string>
+      <string>Name</string>
      </property>
     </widget>
    </item>
@@ -91,13 +91,13 @@ color: black;
 padding-bottom:7px;</string>
      </property>
      <property name="text">
-      <string>Surname</string>
+      <string/>
      </property>
      <property name="echoMode">
       <enum>QLineEdit::Normal</enum>
      </property>
      <property name="placeholderText">
-      <string>Password</string>
+      <string>Surname</string>
      </property>
     </widget>
    </item>
@@ -111,13 +111,13 @@ color: black;
 padding-bottom:7px;</string>
      </property>
      <property name="text">
-      <string>Login</string>
+      <string/>
      </property>
      <property name="echoMode">
       <enum>QLineEdit::Normal</enum>
      </property>
      <property name="placeholderText">
-      <string>Password</string>
+      <string>Login</string>
      </property>
     </widget>
    </item>
@@ -131,13 +131,13 @@ color: black;
 padding-bottom:7px;</string>
      </property>
      <property name="text">
-      <string>Email</string>
+      <string/>
      </property>
      <property name="echoMode">
       <enum>QLineEdit::Normal</enum>
      </property>
      <property name="placeholderText">
-      <string>Password</string>
+      <string>Email</string>
      </property>
     </widget>
    </item>
@@ -151,7 +151,7 @@ color: black;
 padding-bottom:7px;</string>
      </property>
      <property name="text">
-      <string>Password</string>
+      <string/>
      </property>
      <property name="echoMode">
       <enum>QLineEdit::Password</enum>
@@ -171,13 +171,13 @@ color: black;
 padding-bottom:7px;</string>
      </property>
      <property name="text">
-      <string>Repeat password</string>
+      <string/>
      </property>
      <property name="echoMode">
       <enum>QLineEdit::Password</enum>
      </property>
      <property name="placeholderText">
-      <string>Password</string>
+      <string>Repeat password</string>
      </property>
     </widget>
    </item>
@@ -193,7 +193,7 @@ padding-bottom:7px;</string>
       <string notr="true">color: red;</string>
      </property>
      <property name="text">
-      <string>Error: incorrect password</string>
+      <string/>
      </property>
     </widget>
    </item>
@@ -215,6 +215,8 @@ border: 1px solid black;</string>
    </item>
   </layout>
  </widget>
- <resources/>
+ <resources>
+  <include location="resource.qrc"/>
+ </resources>
  <connections/>
 </ui>

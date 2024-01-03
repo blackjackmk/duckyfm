@@ -73,6 +73,7 @@ class LoginScreen(QDialog):
         self.ui.setupUi(self)
 
     def on_login_btn_clicked(self):
+        self.ui.error.setText("")
         username = self.ui.login.text() 
         password = self.ui.password.text()
         global CurrentUser
@@ -96,9 +97,20 @@ class RegisterScreen(QDialog):
         self.ui.setupUi(self)
 
     def on_register_btn_clicked(self):
-        #rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")
-        login_window.show()
-        self.close()
+        self.ui.error.setText("")
+        username = self.ui.login.text()
+        name = self.ui.name.text()
+        surname = self.ui.surname.text()
+        email = self.ui.email.text()
+        haslo = self.ui.password.text()
+        haslo2 = self.ui.password_repeat.text()
+        try:
+            rejestracja(username, name, surname, email, haslo, haslo2)
+            #!udana rejestracja - pop up window
+            login_window.show()
+            self.close()
+        except ValueError as e:
+            self.ui.error.setText(str(e))
 
     def on_back_btn_clicked(self):
         login_window.show()
