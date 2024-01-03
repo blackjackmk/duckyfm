@@ -75,12 +75,10 @@ class LoginScreen(QDialog):
     def on_login_btn_clicked(self):
         username = self.ui.login.text() 
         password = self.ui.password.text()
-        #!check is not empty
         global CurrentUser
         CurrentUser = logowanie(username, password)
         if CurrentUser:
             self.successful_login.emit()
-            #window.show()
             self.close()
         else:
             self.ui.error.setText("Login error")

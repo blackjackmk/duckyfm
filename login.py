@@ -4,20 +4,21 @@ import re
 from default_base import db, conn
 from classes import User, Admin
 
-
 #logowanie
 def logowanie(login, password):
     query = "SELECT username, user_id, is_admin, haslo FROM users WHERE username = ?"
     db.execute(query, (login,))
     result = db.fetchone()
+    if not result:
+        return None
     hash = hashlib.sha256()
     hash.update(password.encode())
     szyfred = hash.hexdigest()  #zaszyfrowane hasło
-    if szyfred == result[3]:
-        if result[2] == 0:
-            return User(result[0], False, result[1]) #zwykły użytkownik
+    if szyfred == result['haslo']:
+        if result['is_admin'] == 0:
+            return User(result['username'], False, result['user_id']) #zwykły użytkownik
         else:
-            return Admin(result[0], result[1]) #użytkownik z uprawnieniami admina
+            return Admin(result['username'], True,  result['user_id']) #użytkownik z uprawnieniami admina
     else:
         return None
 
@@ -53,4 +54,3 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
     conn.commit()
 
 #rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")
-
