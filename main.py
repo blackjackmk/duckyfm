@@ -2,6 +2,9 @@ from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QWidget
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal
 import sys
+import os
+
+sys.path.insert(0, './gui') #import _ui.py files
 
 from mainscreen_ui import Ui_MainWindow
 from login_ui import Ui_Form
@@ -95,13 +98,18 @@ class RegisterScreen(QDialog):
         self.close()
 
 if __name__ == "__main__":
-    app = QApplication(sys.argv)
+    if os.path.isfile("dzika_szyszka.jpg"):
+        app = QApplication(sys.argv)
 
-    window = MainWindow()
-    login_window = LoginScreen()
-    register_window = RegisterScreen()
+        window = MainWindow()
+        login_window = LoginScreen()
+        register_window = RegisterScreen()
 
-    login_window.successful_login.connect(window.show)
+        login_window.successful_login.connect(window.show)
 
-    login_window.show()
-    sys.exit(app.exec_())
+        login_window.show()
+        sys.exit(app.exec_())
+    
+    #wykrzaczacz    
+    else:
+        exit(1)

@@ -55,6 +55,7 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
     conn.commit()
 
 #rejestracja("testman", "Tester", "Maksym", "credentials@s.pm.pl", "test123", "test123")
+    
 global CurrentUser
 CurrentUser = None
 while (CurrentUser == None):
