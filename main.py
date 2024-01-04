@@ -1,5 +1,5 @@
-from PyQt5 import QtWidgets
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QWidget
+from PyQt5 import QtCore, QtGui, QtWidgets
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal
 import sys
 import os
@@ -32,8 +32,9 @@ class MainWindow(QMainWindow):
         if CurrentUser.is_admin:
             self.ui.addmin.show()
             self.ui.addmin_2.show() 
+    
     #może zrobić to enum'em
-    #[home, library, liked, admin, search, user, cart]
+    #[home, library, liked, admin, search, user]
 
     def on_stackedWidget_currentChanged(self, index): #przy zmianie okna
         btn_list = self.ui.sidebar_icon.findChildren(QPushButton)
@@ -49,10 +50,27 @@ class MainWindow(QMainWindow):
             else:
                 btn.setAutoExclusive(True)
 
+
+    def ostatnio_dodane_fill(self):
+        for r in range(2): #row
+            for c in range(3): #col
+                self.ui.new_album = QtWidgets.QPushButton(self.ui.home_page)
+                font = QtGui.QFont()
+                font.setPointSize(14)
+                icon8 = QtGui.QIcon()
+                icon8.addPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+                self.ui.new_album.setFont(font)
+                self.ui.new_album.setStyleSheet("")
+                self.ui.new_album.setIcon(icon8)
+                self.ui.new_album.setIconSize(QtCore.QSize(30, 30))
+                self.ui.new_album.setObjectName("new_album")
+                self.ui.ostatnio_dodane.addWidget(self.ui.new_album, r, c, 1, 1)
+                self.ui.new_album.setText("City of Stars")
     #funkcje do przycisków sidebaru
     #oba przyciski są połączone, więc wystarczy zaprogramować tylko jeden
     def on_home_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(0)
+        self.ostatnio_dodane_fill()
     def on_library_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)
     def on_liked_toggled(self):
