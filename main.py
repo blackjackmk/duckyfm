@@ -71,7 +71,7 @@ class MainWindow(QMainWindow):
                 n += 1
 
     def discover_fill(self):
-        for r in range(2): #row
+        for r in range(3): #row
             for c in range(5): #col
                 self.ui.song_card = QtWidgets.QWidget(self.ui.home_container)
                 self.ui.song_card.setObjectName("song_card")
@@ -112,6 +112,100 @@ class MainWindow(QMainWindow):
                 self.ui.artist.setText("Gibbs")
                 self.ui.gridLayout_4.addWidget(self.ui.song_card, r, c, 1, 1)
 
+    def library_fill(self):
+        for r in range(3): #row
+            for c in range(4): #col
+                self.ui.library_card = QtWidgets.QFrame(self.ui.library_container)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.library_card.sizePolicy().hasHeightForWidth())
+                self.ui.library_card.setSizePolicy(sizePolicy)
+                self.ui.library_card.setFrameShape(QtWidgets.QFrame.StyledPanel)
+                self.ui.library_card.setFrameShadow(QtWidgets.QFrame.Raised)
+                self.ui.library_card.setObjectName("library_card")
+                self.ui.verticalLayout_23 = QtWidgets.QVBoxLayout(self.ui.library_card)
+                self.ui.verticalLayout_23.setObjectName("verticalLayout_23")
+                self.ui.library_card_img = QtWidgets.QLabel(self.ui.library_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.library_card_img.sizePolicy().hasHeightForWidth())
+                self.ui.library_card_img.setSizePolicy(sizePolicy)
+                self.ui.library_card_img.setText("")
+                self.ui.library_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-unchecked.svg"))
+                self.ui.library_card_img.setScaledContents(False)
+                self.ui.library_card_img.setAlignment(QtCore.Qt.AlignCenter)
+                self.ui.library_card_img.setObjectName("library_card_img")
+                self.ui.verticalLayout_23.addWidget(self.ui.library_card_img)
+                self.ui.library_card_title = QtWidgets.QLabel(self.ui.library_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.library_card_title.sizePolicy().hasHeightForWidth())
+                self.ui.library_card_title.setSizePolicy(sizePolicy)
+                self.ui.library_card_title.setObjectName("library_card_title")
+                self.ui.verticalLayout_23.addWidget(self.ui.library_card_title)
+                self.ui.library_card_autor = QtWidgets.QLabel(self.ui.library_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.library_card_autor.sizePolicy().hasHeightForWidth())
+                self.ui.library_card_autor.setSizePolicy(sizePolicy)
+                self.ui.library_card_autor.setObjectName("library_card_autor")
+                self.ui.verticalLayout_23.addWidget(self.ui.library_card_autor)
+                self.ui.gridLayout_2.addWidget(self.ui.library_card, r, c, 1, 1)
+                self.ui.library_card_title.setText("Album")
+                self.ui.library_card_autor.setText("Artist")
+
+    def liked_fill(self):
+        for r in range(3): #row
+            for c in range(4): #col
+                self.ui.liked_card = QtWidgets.QFrame(self.ui.liked_container)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.liked_card.sizePolicy().hasHeightForWidth())
+                self.ui.liked_card.setSizePolicy(sizePolicy)
+                self.ui.liked_card.setFrameShape(QtWidgets.QFrame.StyledPanel)
+                self.ui.liked_card.setFrameShadow(QtWidgets.QFrame.Raised)
+                self.ui.liked_card.setObjectName("liked_card")
+                self.ui.verticalLayout_31 = QtWidgets.QVBoxLayout(self.ui.liked_card)
+                self.ui.verticalLayout_31.setObjectName("verticalLayout_31")
+                self.ui.liked_card_img = QtWidgets.QLabel(self.ui.liked_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
+                self.ui.liked_card_img.setSizePolicy(sizePolicy)
+                self.ui.liked_card_img.setText("")
+                self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/heart.svg"))
+                self.ui.liked_card_img.setScaledContents(False)
+                self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
+                self.ui.liked_card_img.setObjectName("liked_card_img")
+                self.ui.verticalLayout_31.addWidget(self.ui.liked_card_img)
+                self.ui.liked_card_title = QtWidgets.QLabel(self.ui.liked_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.liked_card_title.sizePolicy().hasHeightForWidth())
+                self.ui.liked_card_title.setSizePolicy(sizePolicy)
+                font = QtGui.QFont()
+                font.setPointSize(12)
+                self.ui.liked_card_title.setFont(font)
+                self.ui.liked_card_title.setObjectName("liked_card_title")
+                self.ui.verticalLayout_31.addWidget(self.ui.liked_card_title)
+                self.ui.liked_card_autor = QtWidgets.QLabel(self.ui.liked_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.liked_card_autor.sizePolicy().hasHeightForWidth())
+                self.ui.liked_card_autor.setSizePolicy(sizePolicy)
+                self.ui.liked_card_autor.setObjectName("liked_card_autor")
+                self.ui.verticalLayout_31.addWidget(self.ui.liked_card_autor)
+                self.ui.gridLayout_3.addWidget(self.ui.liked_card, r, c, 1, 1)
+                self.ui.liked_card_title.setText("Album")
+                self.ui.liked_card_autor.setText("Artist")
 
     #funkcje do przycisków sidebaru
     #oba przyciski są połączone, więc wystarczy zaprogramować tylko jeden
@@ -121,8 +215,10 @@ class MainWindow(QMainWindow):
         self.discover_fill()
     def on_library_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)
+        self.library_fill()
     def on_liked_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(2)
+        self.liked_fill()
     def on_addmin_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
 
