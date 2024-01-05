@@ -10,7 +10,7 @@ from mainscreen_ui import Ui_MainWindow
 from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
-from login import logowanie, rejestracja
+#from login import logowanie, rejestracja
 
 global CurrentUser
 
@@ -52,6 +52,8 @@ class MainWindow(QMainWindow):
 
 
     def ostatnio_dodane_fill(self):
+        latest = ["Pierwszy", "Drugi", "Trzeci", "Czwarty", "Piąty", "Szósty"]
+        n = 0
         for r in range(2): #row
             for c in range(3): #col
                 self.ui.new_album = QtWidgets.QPushButton(self.ui.home_page)
@@ -65,7 +67,11 @@ class MainWindow(QMainWindow):
                 self.ui.new_album.setIconSize(QtCore.QSize(30, 30))
                 self.ui.new_album.setObjectName("new_album")
                 self.ui.ostatnio_dodane.addWidget(self.ui.new_album, r, c, 1, 1)
-                self.ui.new_album.setText("City of Stars")
+                self.ui.new_album.setText(latest[n])
+                n += 1
+
+    def discover_fill(self):
+        pass
     #funkcje do przycisków sidebaru
     #oba przyciski są połączone, więc wystarczy zaprogramować tylko jeden
     def on_home_toggled(self):
@@ -86,7 +92,6 @@ class MainWindow(QMainWindow):
 
     def on_profile_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(5)
-
 
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
@@ -144,14 +149,16 @@ if __name__ == "__main__":
     if os.path.isfile("dzika_szyszka.jpg"):
         app = QApplication(sys.argv)
 
-        login_window = LoginScreen()
-        register_window = RegisterScreen()
+        #login_window = LoginScreen()
+        #register_window = RegisterScreen()
         window = MainWindow()
 
         
-        login_window.successful_login.connect(window.show)
-        login_window.successful_login.connect(window.show_admin)
-        login_window.show()
+        #login_window.successful_login.connect(window.show)
+        #login_window.successful_login.connect(window.show_admin)
+        #Debug
+        #login_window.show()
+        window.show()
         sys.exit(app.exec_())
     
     #wykrzaczacz    
