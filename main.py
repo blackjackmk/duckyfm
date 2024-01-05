@@ -71,12 +71,54 @@ class MainWindow(QMainWindow):
                 n += 1
 
     def discover_fill(self):
-        pass
+        for r in range(2): #row
+            for c in range(5): #col
+                self.ui.song_card = QtWidgets.QWidget(self.ui.home_container)
+                self.ui.song_card.setObjectName("song_card")
+                self.ui.verticalLayout_7 = QtWidgets.QVBoxLayout(self.ui.song_card)
+                self.ui.verticalLayout_7.setContentsMargins(0, 0, 0, 0)
+                self.ui.verticalLayout_7.setSpacing(0)
+                self.ui.verticalLayout_7.setObjectName("verticalLayout_7")
+                self.ui.img = QtWidgets.QLabel(self.ui.song_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.img.sizePolicy().hasHeightForWidth())
+                self.ui.img.setSizePolicy(sizePolicy)
+                self.ui.img.setText("")
+                self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/play3.svg"))
+                self.ui.img.setScaledContents(False)
+                self.ui.img.setAlignment(QtCore.Qt.AlignCenter)
+                self.ui.img.setObjectName("img")
+                self.ui.verticalLayout_7.addWidget(self.ui.img)
+                self.ui.song_title = QtWidgets.QLabel(self.ui.song_card)
+                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+                sizePolicy.setHorizontalStretch(0)
+                sizePolicy.setVerticalStretch(0)
+                sizePolicy.setHeightForWidth(self.ui.song_title.sizePolicy().hasHeightForWidth())
+                self.ui.song_title.setSizePolicy(sizePolicy)
+                font = QtGui.QFont()
+                font.setPointSize(12)
+                self.ui.song_title.setFont(font)
+                self.ui.song_title.setObjectName("song_title")
+                self.ui.verticalLayout_7.addWidget(self.ui.song_title)
+                self.ui.artist = QtWidgets.QLabel(self.ui.song_card)
+                font = QtGui.QFont()
+                font.setPointSize(10)
+                self.ui.artist.setFont(font)
+                self.ui.artist.setObjectName("artist_2")
+                self.ui.verticalLayout_7.addWidget(self.ui.artist)
+                self.ui.song_title.setText("Cinema City")
+                self.ui.artist.setText("Gibbs")
+                self.ui.gridLayout_4.addWidget(self.ui.song_card, r, c, 1, 1)
+
+
     #funkcje do przycisków sidebaru
     #oba przyciski są połączone, więc wystarczy zaprogramować tylko jeden
     def on_home_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(0)
         self.ostatnio_dodane_fill()
+        self.discover_fill()
     def on_library_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(1)
     def on_liked_toggled(self):
