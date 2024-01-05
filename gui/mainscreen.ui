@@ -639,6 +639,9 @@
              </sizepolicy>
             </property>
             <property name="text">
+             <string/>
+            </property>
+            <property name="placeholderText">
              <string>Find your passion...</string>
             </property>
            </widget>
@@ -675,7 +678,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="home_page">
           <property name="styleSheet">
@@ -1385,8 +1388,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>261</width>
-                <height>209</height>
+                <width>706</width>
+                <height>478</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_25">
@@ -1834,8 +1837,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>245</width>
-                <height>287</height>
+                <width>688</width>
+                <height>454</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_37">
