@@ -10,7 +10,7 @@ from mainscreen_ui import Ui_MainWindow
 from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
-#from login import logowanie, rejestracja
+from login import logowanie, rejestracja
 
 global CurrentUser
 
@@ -329,6 +329,11 @@ class MainWindow(QMainWindow):
 
     def on_profile_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(5)
+        self.ui.login.setText(CurrentUser.username)
+        self.ui.name.setText(CurrentUser.name)
+        self.ui.surname.setText(CurrentUser.surname)
+        self.ui.email.setText(CurrentUser.email)
+        self.ui.addres.setPlainText(CurrentUser.adress)
 
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
@@ -386,16 +391,14 @@ if __name__ == "__main__":
     if os.path.isfile("dzika_szyszka.jpg"):
         app = QApplication(sys.argv)
 
-        #login_window = LoginScreen()
-        #register_window = RegisterScreen()
+        login_window = LoginScreen()
+        register_window = RegisterScreen()
         window = MainWindow()
 
         
-        #login_window.successful_login.connect(window.show)
-        #login_window.successful_login.connect(window.show_admin)
-        #Debug
-        #login_window.show()
-        window.show()
+        login_window.successful_login.connect(window.show)
+        login_window.successful_login.connect(window.show_admin)
+        login_window.show()
         sys.exit(app.exec_())
     
     #wykrzaczacz    

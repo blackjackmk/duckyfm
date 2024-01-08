@@ -75,10 +75,19 @@ class User:
         self.username = username
         self.is_admin = is_admin
         self.id = id
-        #przy tworzeniu potrzebujemy pobrać z bazy ulubione utwory i albumy
-        self.get_liked_albums()
-        self.get_liked_songs()
+        self.get_personal_info()
     
+
+    def get_personal_info(self):
+        query = "SELECT name, surname, email, adress FROM users WHERE user_id = ?"
+        db.execute(query, (self.id,))
+        result = db.fetchone()
+        self.name = result['name']
+        self.surname = result['surname']
+        self.email = result['email']
+        self.adress = result['adress']
+
+
     liked_albums = ()
     def get_liked_albums(self):
         query = "SELECT id_album FROM ulubione_plyty WHERE id_usera = ?"
@@ -103,7 +112,7 @@ class User:
     def dislike_album(self, song_id):
         self.liked_songs.remove(song_id)
 
-    def update_favourite(self):
+    def update_favourite(self):#w którymś momencie potrzebujemy wprowadzić te zmiany do bazy
         # Remove all of the existing liked songs for the user
         query = "DELETE FROM ulubione_utwory WHERE id_usera = ?"
         db.execute(query, (self.id,))
@@ -123,7 +132,7 @@ class User:
             db.execute(query, (self.id, album_id))
 
         db.commit()
-    #w którymś momencie potrzebujemy wprowadzić te zmiany do bazy
+    
         
 
 def only_admin(func):
