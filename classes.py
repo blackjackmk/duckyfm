@@ -87,7 +87,6 @@ class User:
         self.email = result['email']
         self.adress = result['adress']
 
-
     liked_albums = ()
     def get_liked_albums(self):
         query = "SELECT id_album FROM ulubione_plyty WHERE id_usera = ?"
@@ -133,6 +132,10 @@ class User:
 
         db.commit()
     
+    def update_user_info(self):
+        query = "UPDATE users SET username = ?, name = ?, surname = ?, email = ?, adress = ? WHERE user_id = ?"
+        db.execute(query, (self.username, self.name, self.surname, self.email, self.adress, self.id))
+        conn.commit()
         
 
 def only_admin(func):

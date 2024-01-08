@@ -24,7 +24,7 @@ users_table = '''CREATE TABLE users (
     name NVARCHAR (60), 
     surname NVARCHAR (80), 
     email NVARCHAR (40),
-    adress NVARCHAR, 
+    adress NVARCHAR (250), 
     is_admin INT DEFAULT (0), 
     haslo NVARCHAR(500) NOT NULL);'''
 genre = '''CREATE TABLE genre (

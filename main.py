@@ -335,6 +335,15 @@ class MainWindow(QMainWindow):
         self.ui.email.setText(CurrentUser.email)
         self.ui.addres.setPlainText(CurrentUser.adress)
 
+    def on_profile_save_btn_clicked(self):
+        CurrentUser.username = self.ui.login.text()
+        CurrentUser.name = self.ui.name.text()
+        CurrentUser.surname = self.ui.surname.text()
+        CurrentUser.email = self.ui.email.text()
+        CurrentUser.adress = self.ui.addres.toPlainText()
+        CurrentUser.update_user_info()
+
+
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
     def __init__(self):
