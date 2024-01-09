@@ -19,7 +19,7 @@ def toggle_stylesheet(style):
         app = QApplication.instance()
         if app is None:
             raise RuntimeError("No Qt Application found.")
-        if style == "Light":
+        if style == 0:
             path = "./gui/light_layout.qss"
         else:
             path = "./gui/dark_layout.qss"
@@ -27,6 +27,7 @@ def toggle_stylesheet(style):
         file.open(QFile.ReadOnly | QFile.Text)
         stream = QTextStream(file)
         app.setStyleSheet(stream.readAll())
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -42,8 +43,21 @@ class MainWindow(QMainWindow):
         self.ui.addmin.hide()
         self.ui.addmin_2.hide()
         #layout style change
-        self.ui.theme_combo.currentTextChanged.connect(lambda: toggle_stylesheet(self.ui.theme_combo.currentText()))
+        self.ui.theme_combo.currentTextChanged.connect(lambda: toggle_stylesheet(self.ui.theme_combo.currentIndex()))
+        #change language
+        self.ui.language_combo.currentIndexChanged.connect(lambda: self.change_language(self.ui.language_combo.currentIndex()))
+        self.ui.trans = QtCore.QTranslator(self)
         
+        self.ui.retranslateUi(self)
+        
+    def change_language(self, language):
+        if language == 0:
+            self.ui.trans.load('./locale/main_en')
+        elif language == 1:
+            self.ui.trans.load('./locale/main_pl')
+        QtWidgets.QApplication.instance().installTranslator(self.ui.trans)
+        self.ui.retranslateUi(self)
+
     def show_admin(self):
         if CurrentUser.is_admin:
             self.ui.addmin.show()
