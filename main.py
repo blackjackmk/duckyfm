@@ -1,6 +1,6 @@
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
-from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal
+from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QFile, QTextStream
 import sys
 import os
 
@@ -13,6 +13,20 @@ from register_ui import Ui_Form as SignUp_Ui_Form
 from login import logowanie, rejestracja
 
 global CurrentUser
+
+def toggle_stylesheet(style):
+        # get the QApplication instance,  or crash if not set
+        app = QApplication.instance()
+        if app is None:
+            raise RuntimeError("No Qt Application found.")
+        if style == "Light":
+            path = "./gui/light_layout.qss"
+        else:
+            path = "./gui/dark_layout.qss"
+        file = QFile(path)
+        file.open(QFile.ReadOnly | QFile.Text)
+        stream = QTextStream(file)
+        app.setStyleSheet(stream.readAll())
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -27,6 +41,8 @@ class MainWindow(QMainWindow):
         #hide admin
         self.ui.addmin.hide()
         self.ui.addmin_2.hide()
+        #layout style change
+        self.ui.theme_combo.currentTextChanged.connect(lambda: toggle_stylesheet(self.ui.theme_combo.currentText()))
         
     def show_admin(self):
         if CurrentUser.is_admin:
@@ -343,7 +359,6 @@ class MainWindow(QMainWindow):
         CurrentUser.adress = self.ui.addres.toPlainText()
         CurrentUser.update_user_info()
 
-
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
     def __init__(self):
@@ -404,7 +419,12 @@ if __name__ == "__main__":
         register_window = RegisterScreen()
         window = MainWindow()
 
-        
+        #stylesheet connect
+        file = QFile("./gui/light_layout.qss")
+        file.open(QFile.ReadOnly | QFile.Text)
+        stream = QTextStream(file)
+        app.setStyleSheet(stream.readAll())
+
         login_window.successful_login.connect(window.show)
         login_window.successful_login.connect(window.show_admin)
         login_window.show()
