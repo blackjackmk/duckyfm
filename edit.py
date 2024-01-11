@@ -84,18 +84,8 @@ def create_album(title, description, genre):
 
 #edytowanie plyty
 
-def edit_album(id, **args):
-    query = "SELECT * FROM plyty WHERE album_id = ?"
-    db.execute(query, (id,))
-    result = db.fetchone()
-    album = Plyty(result[1], result[2], result[3], result[4], result[0])
-    fields_to_update = []
-
-    for field, value in args.items():
-        fields_to_update.append(field)
-
-    for field in fields_to_update:
-        album.__setattr__(field, value)
+def edit_album(id_albumu, title, description, genre):
+    album = Plyty(title, description, genre, id_albumu)
     album.update()
     
 #przypisanie utworów do płyt

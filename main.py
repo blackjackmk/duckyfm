@@ -11,7 +11,7 @@ from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
-from edit import create_album
+from edit import create_album, edit_album
 from default_base import db, conn
 
 global CurrentUser
@@ -399,8 +399,8 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(3)
         
         def on_album_id_field_option_change(index):
-            query = "SELECT title, decription, genre FROM plyty WHERE album_id = ?"
-            db.execute(query, self.ui.album_id_field.itemData(index, Qt.UserRole))
+            query = "SELECT title, description, genre FROM plyty WHERE album_id = ?"
+            db.execute(query, (self.ui.album_id_field.itemData(index, Qt.UserRole),))
             result = db.fetchone()
             self.ui.title_field.setText(result['title'])
             self.ui.description_field.setText(result['description'])
@@ -435,6 +435,12 @@ class MainWindow(QMainWindow):
         description = self.ui.description_field.toPlainText()
         genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
         create_album(title, description, genre)
+    def on_album_edit_btn_clicked(self):
+        id_albumu = self.ui.album_id_field.itemData(self.ui.album_id_field.currentIndex(), Qt.UserRole)
+        title = self.ui.title_field.text()
+        description = self.ui.description_field.toPlainText()
+        genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
+        edit_album(id_albumu, title, description, genre)
 
 
 class LoginScreen(QDialog):
