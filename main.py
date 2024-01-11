@@ -397,6 +397,15 @@ class MainWindow(QMainWindow):
         self.liked_fill()
     def on_addmin_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
+        
+        def on_album_id_field_option_change(index):
+            query = "SELECT title, decription, genre FROM plyty WHERE album_id = ?"
+            db.execute(query, self.ui.album_id_field.itemData(index, Qt.UserRole))
+            result = db.fetchone()
+            self.ui.title_field.setText(result['title'])
+            self.ui.description_field.setText(result['description'])
+            self.ui.genre_field.setCurrentIndex(self.ui.genre_field.findData(result['genre'], Qt.UserRole))
+        self.ui.album_id_field.currentIndexChanged.connect(lambda: on_album_id_field_option_change(self.ui.album_id_field.currentIndex()))
     def on_search_button_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(4)
         search_text = self.ui.search_line.text().strip()

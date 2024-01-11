@@ -58,10 +58,9 @@ class Plyty:
 
     #tworzenie
     def create(self):
-        query = "INSERT INTO plyty (title, description, genre) VALUES (?, ?, ?, ?)"
+        query = "INSERT INTO plyty (title, description, genre) VALUES (?, ?, ?)"
         db.execute(query, (self.title, self.description, self.genre))
         conn.commit()
-        self.id = db.lastrowid
 
     #edytowanie
     def update(self):
