@@ -1,6 +1,5 @@
 import datetime
 from default_base import db, conn
-global CurrentUser
 
 class Artist:
     def __init__(self, pseudonim, opis, id=None): # is always executed when the class is being initiated
@@ -136,13 +135,6 @@ class User:
         query = "UPDATE users SET username = ?, name = ?, surname = ?, email = ?, adress = ? WHERE user_id = ?"
         db.execute(query, (self.username, self.name, self.surname, self.email, self.adress, self.id))
         conn.commit()
-        
-def only_admin(func):
-    def wrapper(*args, **kwargs):
-        if not isinstance(CurrentUser, Admin):#gdy nie jest objektem klasy
-            raise PermissionError("Brak dostępu. Zaloguj się jako admin.")
-        return func(*args, **kwargs)
-    return wrapper
 
 class Admin(User):
     def __init__(self, username, is_admin, id):

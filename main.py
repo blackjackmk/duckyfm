@@ -409,9 +409,9 @@ class MainWindow(QMainWindow):
         CurrentUser.adress = self.ui.addres.toPlainText()
         CurrentUser.update_user_info()
 
-    def on_album_add_btn(self):
+    def on_album_add_btn_clicked(self):
         title = self.ui.title_field.text()
-        description = self.ui.description_field.text()
+        description = self.ui.description_field.toPlainText()
         genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
         artist = self.ui.artist_field.itemData(self.ui.artist_field.currentIndex(), Qt.UserRole)
         create_album(title, description, genre, artist)
