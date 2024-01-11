@@ -11,7 +11,7 @@ from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
-from edit import create_album, edit_album
+from edit import create_album, edit_album, delete_album
 from default_base import db, conn
 
 global CurrentUser
@@ -441,6 +441,9 @@ class MainWindow(QMainWindow):
         description = self.ui.description_field.toPlainText()
         genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
         edit_album(id_albumu, title, description, genre)
+    def on_album_dlt_btn_clicked(self):
+        id_albumu = self.ui.album_id_field.itemData(self.ui.album_id_field.currentIndex(), Qt.UserRole)
+        delete_album(id_albumu)
 
 
 class LoginScreen(QDialog):
