@@ -29,7 +29,7 @@ users_table = '''CREATE TABLE users (
     haslo NVARCHAR(500) NOT NULL);'''
 genre = '''CREATE TABLE genre (
     id_genre INT IDENTITY PRIMARY KEY,
-    title    NVARCHAR    NOT NULL
+    title    NVARCHAR(10)    NOT NULL
                      UNIQUE
 );'''
 wykonawcy_utwory = '''CREATE TABLE wykonawcy_utwory (

@@ -137,7 +137,6 @@ class User:
         db.execute(query, (self.username, self.name, self.surname, self.email, self.adress, self.id))
         conn.commit()
         
-
 def only_admin(func):
     def wrapper(*args, **kwargs):
         if not isinstance(CurrentUser, Admin):#gdy nie jest objektem klasy

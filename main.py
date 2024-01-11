@@ -1,5 +1,5 @@
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QWidget
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QWidget
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QFile, QTextStream
 import sys
 import os
@@ -11,6 +11,7 @@ from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
+from default_base import db, conn
 
 global CurrentUser
 
@@ -44,7 +45,7 @@ class MainWindow(QMainWindow):
         self.ui.addmin_2.hide()
         #layout style change
         self.ui.theme_combo.currentTextChanged.connect(lambda: toggle_stylesheet(self.ui.theme_combo.currentIndex()))
-        #change language
+        #language change
         self.ui.language_combo.currentIndexChanged.connect(lambda: self.change_language(self.ui.language_combo.currentIndex()))
         self.ui.trans = QtCore.QTranslator(self)
         
@@ -61,7 +62,19 @@ class MainWindow(QMainWindow):
     def show_admin(self):
         if CurrentUser.is_admin:
             self.ui.addmin.show()
-            self.ui.addmin_2.show() 
+            self.ui.addmin_2.show()
+            #załadować id albumów do album_id_field, song_album_field
+            db.execute("SELECT album_id, title FROM plyty")
+            get_albums = db.fetchall()
+            for i, (album_id, title) in enumerate(get_albums):
+                self.ui.album_id_field.insertItem(i, title)
+                self.ui.album_id_field.setItemData(i, album_id, Qt.UserRole)
+                self.ui.song_album_field.insertItem(i, title)
+                self.ui.song_album_field.setItemData(i, album_id, Qt.UserRole)
+            #załadować z bazy listę stylów muzyki z indeksami do genre_field, song_genre_field
+            #załadować id piosenek do song_id_field
+            #załadować id arystów do song_artist_field, artist_id_field
+            #załadować id adminów do admin_id_field
     
     #może zrobić to enum'em
     #[home, library, liked, admin, search, user]
@@ -347,7 +360,6 @@ class MainWindow(QMainWindow):
         self.liked_fill()
     def on_addmin_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
-
     def on_search_button_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(4)
         search_text = self.ui.search_line.text().strip()
@@ -373,6 +385,8 @@ class MainWindow(QMainWindow):
         CurrentUser.adress = self.ui.addres.toPlainText()
         CurrentUser.update_user_info()
 
+    def on_album_add_btn(self):
+        print("Dodać album")
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
     def __init__(self):
@@ -443,7 +457,7 @@ if __name__ == "__main__":
         login_window.successful_login.connect(window.show_admin)
         login_window.show()
         sys.exit(app.exec_())
-    
+        #conn.close() przy zamykaniu applikacji
     #wykrzaczacz    
     else:
         exit(1)
