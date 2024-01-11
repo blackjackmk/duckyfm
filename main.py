@@ -5,13 +5,12 @@ import sys
 import os
 
 sys.path.insert(0, './gui') #import _ui.py files
-
 from mainscreen_ui import Ui_MainWindow
 from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
-from edit import create_album, edit_album, delete_album
+from classes import Artist, Songs, Plyty
 from default_base import db, conn
 
 global CurrentUser
@@ -397,7 +396,7 @@ class MainWindow(QMainWindow):
         self.liked_fill()
     def on_addmin_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(3)
-        
+        #dane do edytowania albumów
         def on_album_id_field_option_change(index):
             query = "SELECT title, description, genre FROM plyty WHERE album_id = ?"
             db.execute(query, (self.ui.album_id_field.itemData(index, Qt.UserRole),))
@@ -406,6 +405,14 @@ class MainWindow(QMainWindow):
             self.ui.description_field.setText(result['description'])
             self.ui.genre_field.setCurrentIndex(self.ui.genre_field.findData(result['genre'], Qt.UserRole))
         self.ui.album_id_field.currentIndexChanged.connect(lambda: on_album_id_field_option_change(self.ui.album_id_field.currentIndex()))
+        #dane do edytowania twórców
+        def on_artist_id_field_option_change(index):
+            query = "SELECT pseudonim, description FROM tworcy WHERE artist_id = ?"
+            db.execute(query, (self.ui.artist_id_field.itemData(index, Qt.UserRole),))
+            result = db.fetchone()
+            self.ui.artist_pseudonim_field.setText(result['pseudonim'])
+            self.ui.artist_description_field.setText(result['description'])
+        self.ui.artist_id_field.currentIndexChanged.connect(lambda: on_artist_id_field_option_change(self.ui.artist_id_field.currentIndex()))
     def on_search_button_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(4)
         search_text = self.ui.search_line.text().strip()
@@ -434,17 +441,37 @@ class MainWindow(QMainWindow):
         title = self.ui.title_field.text()
         description = self.ui.description_field.toPlainText()
         genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
-        create_album(title, description, genre)
+        album = Plyty(title, description, genre)
+        album.create()
     def on_album_edit_btn_clicked(self):
         id_albumu = self.ui.album_id_field.itemData(self.ui.album_id_field.currentIndex(), Qt.UserRole)
         title = self.ui.title_field.text()
         description = self.ui.description_field.toPlainText()
         genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
-        edit_album(id_albumu, title, description, genre)
+        album = Plyty(title, description, genre, id_albumu)
+        album.update()
     def on_album_dlt_btn_clicked(self):
         id_albumu = self.ui.album_id_field.itemData(self.ui.album_id_field.currentIndex(), Qt.UserRole)
-        delete_album(id_albumu)
+        query = "DELETE FROM plyty WHERE album_id = ?"
+        db.execute(query, (id_albumu,))
+        conn.commit()
 
+    def on_artist_add_clicked(self):
+        name = self.ui.artist_pseudonim_field.text()
+        description = self.ui.artist_description_field.toPlainText()
+        artist = Artist(name, description)
+        artist.create()
+    def on_artist_edit_clicked(self):
+        id_artist = self.ui.artist_id_field.itemData(self.ui.artist_id_field.currentIndex(), Qt.UserRole)
+        name = self.ui.artist_pseudonim_field.text()
+        description = self.ui.artist_description_field.toPlainText()
+        artist = Artist(name, description, id_artist)
+        artist.update()
+    def on_artist_delete_clicked(self):
+        id_artist = self.ui.artist_id_field.itemData(self.ui.artist_id_field.currentIndex(), Qt.UserRole)
+        query = "DELETE FROM tworcy WHERE artist_id = ?"
+        db.execute(query, (id_artist,))
+        conn.commit()
 
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
