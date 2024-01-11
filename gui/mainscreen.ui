@@ -636,7 +636,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>6</number>
          </property>
          <widget class="QWidget" name="home_page">
           <property name="styleSheet">
@@ -651,7 +651,7 @@
               </font>
              </property>
              <property name="text">
-              <string>Ostatnio dodane</string>
+              <string>New releases</string>
              </property>
             </widget>
            </item>
@@ -673,7 +673,7 @@
               <string notr="true"/>
              </property>
              <property name="text">
-              <string>Odkryj coś nowego</string>
+              <string>Discover something new</string>
              </property>
             </widget>
            </item>
@@ -693,8 +693,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>772</width>
-                <height>407</height>
+                <width>794</width>
+                <height>399</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -772,8 +772,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>790</width>
-                <height>478</height>
+                <width>812</width>
+                <height>470</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_25">
@@ -824,8 +824,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>772</width>
-                <height>454</height>
+                <width>794</width>
+                <height>446</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -869,19 +869,19 @@
            <item>
             <widget class="QToolBox" name="toolBox">
              <property name="currentIndex">
-              <number>3</number>
+              <number>0</number>
              </property>
              <widget class="QWidget" name="albums_admin">
               <property name="geometry">
                <rect>
                 <x>0</x>
                 <y>-78</y>
-                <width>757</width>
-                <height>246</height>
+                <width>779</width>
+                <height>275</height>
                </rect>
               </property>
               <attribute name="label">
-               <string>Albumy</string>
+               <string>Albums</string>
               </attribute>
               <layout class="QFormLayout" name="formLayout">
                <item row="0" column="0">
@@ -944,26 +944,41 @@
                <item row="5" column="1">
                 <widget class="QComboBox" name="genre_field"/>
                </item>
-               <item row="6" column="0">
+               <item row="7" column="0">
                 <widget class="QPushButton" name="album_add_btn">
                  <property name="text">
                   <string>Add</string>
                  </property>
                 </widget>
                </item>
-               <item row="6" column="1">
+               <item row="7" column="1">
                 <widget class="QPushButton" name="album_edit_btn">
                  <property name="text">
                   <string>Edit</string>
                  </property>
                 </widget>
                </item>
-               <item row="7" column="0" colspan="2">
+               <item row="8" column="0" colspan="2">
                 <widget class="QPushButton" name="album_dlt_btn">
                  <property name="text">
                   <string>Delete</string>
                  </property>
                 </widget>
+               </item>
+               <item row="6" column="0">
+                <widget class="QLabel" name="artist">
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Artist</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QComboBox" name="artist_field"/>
                </item>
               </layout>
              </widget>
@@ -972,12 +987,12 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>757</width>
+                <width>779</width>
                 <height>369</height>
                </rect>
               </property>
               <attribute name="label">
-               <string>Piosenki</string>
+               <string>Songs</string>
               </attribute>
               <layout class="QFormLayout" name="formLayout_2">
                <item row="4" column="0">
@@ -1117,12 +1132,12 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>757</width>
+                <width>779</width>
                 <height>197</height>
                </rect>
               </property>
               <attribute name="label">
-               <string>Wykonawcy</string>
+               <string>Artist</string>
               </attribute>
               <layout class="QFormLayout" name="formLayout_3">
                <item row="0" column="0">
@@ -1183,12 +1198,12 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>774</width>
-                <height>137</height>
+                <width>796</width>
+                <height>133</height>
                </rect>
               </property>
               <attribute name="label">
-               <string>Administratorzy</string>
+               <string>Admins</string>
               </attribute>
               <layout class="QVBoxLayout" name="verticalLayout_15">
                <item>
@@ -1234,7 +1249,7 @@
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Zrezygnować</string>
+                    <string>Resignate</string>
                    </property>
                   </widget>
                  </item>
@@ -1247,7 +1262,7 @@
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Awansować</string>
+                    <string>Awans</string>
                    </property>
                   </widget>
                  </item>
@@ -1260,7 +1275,7 @@
                     </sizepolicy>
                    </property>
                    <property name="text">
-                    <string>Usunąć</string>
+                    <string>Delete</string>
                    </property>
                   </widget>
                  </item>
@@ -1578,7 +1593,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Regulamin</string>
+                <string>Statute</string>
                </property>
               </widget>
              </item>
@@ -1590,7 +1605,7 @@
                 </font>
                </property>
                <property name="text">
-                <string>Wydruk</string>
+                <string>Printout</string>
                </property>
               </widget>
              </item>
@@ -1788,7 +1803,7 @@
              </column>
              <item row="0" column="0">
               <property name="text">
-               <string>2 Faced qwertyuiolkjhgfdsxcvbn</string>
+               <string>2 Faced</string>
               </property>
              </item>
              <item row="0" column="1">

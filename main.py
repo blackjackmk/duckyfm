@@ -11,6 +11,7 @@ from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
+from edit import create_album
 from default_base import db, conn
 
 global CurrentUser
@@ -85,12 +86,14 @@ class MainWindow(QMainWindow):
             for i, (song_id, title) in enumerate(get_songs):
                 self.ui.song_id_field.insertItem(i, title)
                 self.ui.song_id_field.setItemData(i, song_id, Qt.UserRole)
-            #załadować id arystów do artist_id_field
+            #załadować id arystów do artist_id_field, artist_field
             db.execute("SELECT artist_id, pseudonim FROM tworcy")
             get_artists = db.fetchall()
             for i, (artist_id, pseudonim) in enumerate(get_artists):
                 self.ui.artist_id_field.insertItem(i, pseudonim)
                 self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
+                self.ui.artist_field.insertItem(i, pseudonim)
+                self.ui.artist_field.setItemData(i, artist_id, Qt.UserRole)
             #załadować id adminów do admin_id_field
             db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
             get_admins = db.fetchall()
@@ -390,7 +393,6 @@ class MainWindow(QMainWindow):
             self.search_songs_fill(search_text)
             self.search_albums_fill(search_text)
             self.search_artist_fill(search_text)
-
     def on_profile_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(5)
         self.ui.login.setText(CurrentUser.username)
@@ -408,7 +410,13 @@ class MainWindow(QMainWindow):
         CurrentUser.update_user_info()
 
     def on_album_add_btn(self):
-        print("Dodać album")
+        title = self.ui.title_field.text()
+        description = self.ui.description_field.text()
+        genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
+        artist = self.ui.artist_field.itemData(self.ui.artist_field.currentIndex(), Qt.UserRole)
+        create_album(title, description, genre, artist)
+
+
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
     def __init__(self):
