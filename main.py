@@ -72,9 +72,31 @@ class MainWindow(QMainWindow):
                 self.ui.song_album_field.insertItem(i, title)
                 self.ui.song_album_field.setItemData(i, album_id, Qt.UserRole)
             #załadować z bazy listę stylów muzyki z indeksami do genre_field, song_genre_field
+            db.execute("SELECT id_genre, title FROM genre")
+            get_genres = db.fetchall()
+            for i, (id_genre, title) in enumerate(get_genres):
+                self.ui.genre_field.insertItem(i, title)
+                self.ui.genre_field.setItemData(i, id_genre, Qt.UserRole)
+                self.ui.song_genre_field.insertItem(i, title)
+                self.ui.song_genre_field.setItemData(i, id_genre, Qt.UserRole)
             #załadować id piosenek do song_id_field
-            #załadować id arystów do song_artist_field, artist_id_field
+            db.execute("SELECT song_id, title FROM utwory")
+            get_songs = db.fetchall()
+            for i, (song_id, title) in enumerate(get_songs):
+                self.ui.song_id_field.insertItem(i, title)
+                self.ui.song_id_field.setItemData(i, song_id, Qt.UserRole)
+            #załadować id arystów do artist_id_field
+            db.execute("SELECT artist_id, pseudonim FROM tworcy")
+            get_artists = db.fetchall()
+            for i, (artist_id, pseudonim) in enumerate(get_artists):
+                self.ui.artist_id_field.insertItem(i, pseudonim)
+                self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
             #załadować id adminów do admin_id_field
+            db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
+            get_admins = db.fetchall()
+            for i, (user_id, username) in enumerate(get_admins):
+                self.ui.admin_id_field.insertItem(i, username)
+                self.ui.admin_id_field.setItemData(i, user_id, Qt.UserRole)
     
     #może zrobić to enum'em
     #[home, library, liked, admin, search, user]
