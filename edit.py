@@ -78,8 +78,8 @@ def delete_song(id):
 
 #tworzenie plyty
 
-def create_album(title, description, genre, artist):
-    album = Plyty(title, description, genre, artist)
+def create_album(title, description, genre):
+    album = Plyty(title, description, genre)
     album.create()
 
 #edytowanie plyty

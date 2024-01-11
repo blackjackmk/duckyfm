@@ -92,8 +92,6 @@ class MainWindow(QMainWindow):
             for i, (artist_id, pseudonim) in enumerate(get_artists):
                 self.ui.artist_id_field.insertItem(i, pseudonim)
                 self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
-                self.ui.artist_field.insertItem(i, pseudonim)
-                self.ui.artist_field.setItemData(i, artist_id, Qt.UserRole)
             #załadować id adminów do admin_id_field
             db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
             get_admins = db.fetchall()
@@ -120,6 +118,8 @@ class MainWindow(QMainWindow):
 
 
     def ostatnio_dodane_fill(self):
+        for i in reversed(range(self.ui.ostatnio_dodane.count())): 
+            self.ui.ostatnio_dodane.itemAt(i).widget().setParent(None)
         latest = ["Pierwszy", "Drugi", "Trzeci", "Czwarty", "Piąty", "Szósty"]
         n = 0
         for r in range(2): #row
@@ -139,6 +139,8 @@ class MainWindow(QMainWindow):
                 n += 1
 
     def discover_fill(self):
+        for i in reversed(range(self.ui.gridLayout_4.count())): 
+            self.ui.gridLayout_4.itemAt(i).widget().setParent(None)
         for r in range(3): #row
             for c in range(5): #col
                 self.ui.song_card = QtWidgets.QWidget(self.ui.home_container)
@@ -181,6 +183,8 @@ class MainWindow(QMainWindow):
                 self.ui.gridLayout_4.addWidget(self.ui.song_card, r, c, 1, 1)
 
     def library_fill(self):
+        for i in reversed(range(self.ui.gridLayout_2.count())): 
+            self.ui.gridLayout_2.itemAt(i).widget().setParent(None)
         for r in range(3): #row
             for c in range(4): #col
                 self.ui.library_card = QtWidgets.QFrame(self.ui.library_container)
@@ -227,6 +231,8 @@ class MainWindow(QMainWindow):
                 self.ui.library_card_autor.setText("Artist")
 
     def liked_fill(self):
+        for i in reversed(range(self.ui.gridLayout_3.count())): 
+            self.ui.gridLayout_3.itemAt(i).widget().setParent(None)
         for r in range(3): #row
             for c in range(4): #col
                 self.ui.liked_card = QtWidgets.QFrame(self.ui.liked_container)
@@ -276,6 +282,8 @@ class MainWindow(QMainWindow):
                 self.ui.liked_card_autor.setText("Artist")
 
     def search_songs_fill(self, search_text):
+        for i in reversed(range(self.ui.song_search_container.count())): 
+            self.ui.song_search_container.itemAt(i).widget().setParent(None)
         for l in range(2):
             self.ui.search_song_info = QtWidgets.QWidget(self.ui.scrollAreaWidgetContents_4)
             self.ui.search_song_info.setObjectName("search_song_info")
@@ -315,6 +323,8 @@ class MainWindow(QMainWindow):
             self.ui.song_autor.setText("Autor")
     
     def search_albums_fill(self, search_text):
+        for i in reversed(range(self.ui.gridLayout_5.count())): 
+            self.ui.gridLayout_5.itemAt(i).widget().setParent(None)
         for r in range(3): #row
             for c in range(5): #col
                 self.ui.song_card_find = QtWidgets.QWidget(self.ui.albums_search_container)
@@ -357,6 +367,8 @@ class MainWindow(QMainWindow):
                 self.ui.gridLayout_5.addWidget(self.ui.song_card_find, r, c, 1, 1)
     
     def search_artist_fill(self, search_text):
+        for i in reversed(range(self.ui.search_artist.count())): 
+            self.ui.search_artist.itemAt(i).widget().setParent(None)
         for r in range(2): #row
             for c in range(3): #col
                 self.ui.search_singer = QtWidgets.QPushButton(self.ui.scrollAreaWidgetContents_4)
@@ -413,8 +425,7 @@ class MainWindow(QMainWindow):
         title = self.ui.title_field.text()
         description = self.ui.description_field.toPlainText()
         genre = self.ui.genre_field.itemData(self.ui.genre_field.currentIndex(), Qt.UserRole)
-        artist = self.ui.artist_field.itemData(self.ui.artist_field.currentIndex(), Qt.UserRole)
-        create_album(title, description, genre, artist)
+        create_album(title, description, genre)
 
 
 class LoginScreen(QDialog):
