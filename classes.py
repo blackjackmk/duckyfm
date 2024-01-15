@@ -12,7 +12,6 @@ class Artist:
         query = "INSERT INTO tworcy (pseudonim, description) VALUES (?, ?)"
         db.execute(query, (self.pseudonim, self.opis))
         conn.commit()
-        self.id = db.lastrowid
 
     #edytowanie
     def update(self):
@@ -21,7 +20,7 @@ class Artist:
         conn.commit()
 
 class Songs:
-    def __init__(self, title=None, genre=None, artist=None, album=None, status="Published", id=None): # is always executed when the class is being initiated
+    def __init__(self, title=None, genre=None, artist=None, album=None, status=None, id=None): # is always executed when the class is being initiated
         self.title = title
         self.genre = genre
         self.artist = artist
@@ -36,7 +35,6 @@ class Songs:
         createtime = teraz.strftime("%Y-%m-%d %H:%M:%S")
         db.execute(query, (self.title, self.genre, self.artist, self.album, createtime))
         conn.commit()
-        self.id = db.lastrowid
         query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
         db.execute(query, (self.artist, self.id))
         conn.commit()
@@ -45,7 +43,7 @@ class Songs:
     def update(self):
         query = "UPDATE utwory SET title = ?, genre = ?, artist = ?, album = ?, status = ? WHERE song_id = ?"
         db.execute(query, (self.title, self.genre, self.artist, self.album, self.status, self.id))
-        query2 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ?, id_utworu = ?)"
+        query2 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ? WHERE id_utworu = ?"
         db.execute(query2, (self.artist, self.id))
         conn.commit()
 
@@ -67,6 +65,20 @@ class Plyty:
         query = "UPDATE plyty SET title = ?, description = ?, genre = ? WHERE album_id = ?"
         db.execute(query, (self.title, self.description, self.genre, self.id))
         conn.commit()
+
+#tworzenie relacji twórca-utwór (gdy są więcej niż jeden)
+def song_singer_connect(singer_id,song_id):
+    query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
+    db.execute(query, (singer_id, song_id))
+    conn.commit()
+
+#przypisanie utworów do płyt
+def songs_to_album(album_id, songs, singer_id = None): #songs to set z id utworów
+    #jeżeli twórca jest podany, to wszystkie piosenki w albumie będą należały do niego
+    #dla każdego utworu zmienić pole 'album' na album_id
+    for song in songs:
+        s = Songs(None,None,singer_id,album_id,None,song)
+        s.update()
 
 class User:
     def __init__(self, username, is_admin, id):

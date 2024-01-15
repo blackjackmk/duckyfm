@@ -693,8 +693,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>794</width>
-                <height>399</height>
+                <width>63</width>
+                <height>38</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_5">
@@ -772,8 +772,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>812</width>
-                <height>470</height>
+                <width>81</width>
+                <height>38</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_25">
@@ -824,8 +824,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>794</width>
-                <height>446</height>
+                <width>63</width>
+                <height>38</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -875,7 +875,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>0</number>
+              <number>1</number>
              </property>
              <widget class="QWidget" name="albums_admin">
               <property name="geometry">
@@ -883,7 +883,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>788</width>
-                <height>305</height>
+                <height>301</height>
                </rect>
               </property>
               <attribute name="label">
@@ -977,15 +977,30 @@
               <property name="geometry">
                <rect>
                 <x>0</x>
-                <y>0</y>
-                <width>754</width>
-                <height>369</height>
+                <y>-39</y>
+                <width>771</width>
+                <height>340</height>
                </rect>
               </property>
               <attribute name="label">
                <string>Songs</string>
               </attribute>
               <layout class="QFormLayout" name="formLayout_2">
+               <item row="1" column="0">
+                <widget class="QLabel" name="song_id">
+                 <property name="font">
+                  <font>
+                   <pointsize>14</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Song ID:</string>
+                 </property>
+                </widget>
+               </item>
+               <item row="1" column="1">
+                <widget class="QComboBox" name="song_id_field"/>
+               </item>
                <item row="4" column="0">
                 <widget class="QLabel" name="song_title">
                  <property name="font">
@@ -998,6 +1013,9 @@
                  </property>
                 </widget>
                </item>
+               <item row="4" column="1">
+                <widget class="QLineEdit" name="song_title_field"/>
+               </item>
                <item row="6" column="0">
                 <widget class="QLabel" name="song_genre">
                  <property name="font">
@@ -1009,6 +1027,9 @@
                   <string>Song genre:</string>
                  </property>
                 </widget>
+               </item>
+               <item row="6" column="1">
+                <widget class="QComboBox" name="song_genre_field"/>
                </item>
                <item row="8" column="0">
                 <widget class="QLabel" name="song_artist">
@@ -1034,6 +1055,9 @@
                  </property>
                 </widget>
                </item>
+               <item row="12" column="1">
+                <widget class="QComboBox" name="song_album_field"/>
+               </item>
                <item row="16" column="0">
                 <widget class="QLabel" name="song_status">
                  <property name="font">
@@ -1046,38 +1070,26 @@
                  </property>
                 </widget>
                </item>
-               <item row="20" column="0">
-                <widget class="QLabel" name="song_createdate">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
+               <item row="21" column="0">
+                <widget class="QPushButton" name="song_add">
                  <property name="text">
-                  <string>Created at:</string>
+                  <string>Add</string>
                  </property>
                 </widget>
                </item>
-               <item row="20" column="1">
-                <widget class="QDateEdit" name="song_creationdate"/>
-               </item>
-               <item row="1" column="0">
-                <widget class="QLabel" name="song_id">
-                 <property name="font">
-                  <font>
-                   <pointsize>14</pointsize>
-                  </font>
-                 </property>
+               <item row="21" column="1">
+                <widget class="QPushButton" name="song_edit">
                  <property name="text">
-                  <string>Song ID:</string>
+                  <string>Edit</string>
                  </property>
                 </widget>
                </item>
-               <item row="6" column="1">
-                <widget class="QComboBox" name="song_genre_field"/>
-               </item>
-               <item row="12" column="1">
-                <widget class="QComboBox" name="song_album_field"/>
+               <item row="23" column="0" colspan="2">
+                <widget class="QPushButton" name="song_delete">
+                 <property name="text">
+                  <string>Delete</string>
+                 </property>
+                </widget>
                </item>
                <item row="16" column="1">
                 <widget class="QRadioButton" name="is_published">
@@ -1086,35 +1098,8 @@
                  </property>
                 </widget>
                </item>
-               <item row="22" column="0">
-                <widget class="QPushButton" name="song_add">
-                 <property name="text">
-                  <string>Add</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="22" column="1">
-                <widget class="QPushButton" name="song_edit">
-                 <property name="text">
-                  <string>Edit</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="24" column="0" colspan="2">
-                <widget class="QPushButton" name="song_delete">
-                 <property name="text">
-                  <string>Delete</string>
-                 </property>
-                </widget>
-               </item>
-               <item row="4" column="1">
-                <widget class="QLineEdit" name="song_title_field"/>
-               </item>
-               <item row="1" column="1">
-                <widget class="QComboBox" name="song_id_field"/>
-               </item>
                <item row="8" column="1">
-                <widget class="QLineEdit" name="song_artist_field"/>
+                <widget class="QComboBox" name="song_artist_field"/>
                </item>
               </layout>
              </widget>
@@ -1123,8 +1108,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>754</width>
-                <height>197</height>
+                <width>788</width>
+                <height>301</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1190,7 +1175,7 @@
                 <x>0</x>
                 <y>0</y>
                 <width>788</width>
-                <height>119</height>
+                <height>281</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1318,8 +1303,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>794</width>
-                <height>485</height>
+                <width>106</width>
+                <height>171</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_42">

@@ -48,6 +48,7 @@ class MainWindow(QMainWindow):
         #language change
         self.ui.language_combo.currentIndexChanged.connect(lambda: self.change_language(self.ui.language_combo.currentIndex()))
         self.ui.trans = QtCore.QTranslator(self)
+        self.admin_access_connected = False  # Add a flag
         
         self.ui.retranslateUi(self)
         
@@ -59,44 +60,47 @@ class MainWindow(QMainWindow):
         QtWidgets.QApplication.instance().installTranslator(self.ui.trans)
         self.ui.retranslateUi(self)
 
-    def show_admin(self):
-        if CurrentUser.is_admin:
-            self.ui.addmin.show()
-            self.ui.addmin_2.show()
-            #załadować id albumów do album_id_field, song_album_field
-            db.execute("SELECT album_id, title FROM plyty")
-            get_albums = db.fetchall()
-            for i, (album_id, title) in enumerate(get_albums):
-                self.ui.album_id_field.insertItem(i, title)
-                self.ui.album_id_field.setItemData(i, album_id, Qt.UserRole)
-                self.ui.song_album_field.insertItem(i, title)
-                self.ui.song_album_field.setItemData(i, album_id, Qt.UserRole)
-            #załadować z bazy listę stylów muzyki z indeksami do genre_field, song_genre_field
-            db.execute("SELECT id_genre, title FROM genre")
-            get_genres = db.fetchall()
-            for i, (id_genre, title) in enumerate(get_genres):
-                self.ui.genre_field.insertItem(i, title)
-                self.ui.genre_field.setItemData(i, id_genre, Qt.UserRole)
-                self.ui.song_genre_field.insertItem(i, title)
-                self.ui.song_genre_field.setItemData(i, id_genre, Qt.UserRole)
-            #załadować id piosenek do song_id_field
-            db.execute("SELECT song_id, title FROM utwory")
-            get_songs = db.fetchall()
-            for i, (song_id, title) in enumerate(get_songs):
-                self.ui.song_id_field.insertItem(i, title)
-                self.ui.song_id_field.setItemData(i, song_id, Qt.UserRole)
-            #załadować id arystów do artist_id_field, artist_field
-            db.execute("SELECT artist_id, pseudonim FROM tworcy")
-            get_artists = db.fetchall()
-            for i, (artist_id, pseudonim) in enumerate(get_artists):
-                self.ui.artist_id_field.insertItem(i, pseudonim)
-                self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
-            #załadować id adminów do admin_id_field
-            db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
-            get_admins = db.fetchall()
-            for i, (user_id, username) in enumerate(get_admins):
-                self.ui.admin_id_field.insertItem(i, username)
-                self.ui.admin_id_field.setItemData(i, user_id, Qt.UserRole)
+    def admin_access(self):
+        if not self.admin_access_connected:
+            if CurrentUser.is_admin:
+                self.ui.addmin.show()
+                self.ui.addmin_2.show()
+                #załadować id albumów do album_id_field, song_album_field
+                db.execute("SELECT album_id, title FROM plyty")
+                get_albums = db.fetchall()
+                for i, (album_id, title) in enumerate(get_albums):
+                    self.ui.album_id_field.insertItem(i, title)
+                    #self.ui.album_id_field.setItemData(i, album_id, Qt.UserRole)
+                    #self.ui.song_album_field.insertItem(i, title)
+                    self.ui.song_album_field.setItemData(i, album_id, Qt.UserRole)
+                #załadować z bazy listę stylów muzyki z indeksami do genre_field, song_genre_field
+                db.execute("SELECT id_genre, title FROM genre")
+                get_genres = db.fetchall()
+                for i, (id_genre, title) in enumerate(get_genres):
+                    self.ui.genre_field.insertItem(i, title)
+                    self.ui.genre_field.setItemData(i, id_genre, Qt.UserRole)
+                    self.ui.song_genre_field.insertItem(i, title)
+                    self.ui.song_genre_field.setItemData(i, id_genre, Qt.UserRole)
+                #załadować id piosenek do song_id_field
+                db.execute("SELECT song_id, title FROM utwory")
+                get_songs = db.fetchall()
+                for i, (song_id, title) in enumerate(get_songs):
+                    self.ui.song_id_field.insertItem(i, title)
+                    self.ui.song_id_field.setItemData(i, song_id, Qt.UserRole)
+                #załadować id arystów do artist_id_field, song_artist_field
+                db.execute("SELECT artist_id, pseudonim FROM tworcy")
+                get_artists = db.fetchall()
+                for i, (artist_id, pseudonim) in enumerate(get_artists):
+                    self.ui.artist_id_field.insertItem(i, pseudonim)
+                    self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
+                    self.ui.song_artist_field.insertItem(i, pseudonim)
+                    self.ui.song_artist_field.setItemData(i, artist_id, Qt.UserRole)
+                #załadować id adminów do admin_id_field
+                db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
+                get_admins = db.fetchall()
+                for i, (user_id, username) in enumerate(get_admins):
+                    self.ui.admin_id_field.insertItem(i, username)
+                    self.ui.admin_id_field.setItemData(i, user_id, Qt.UserRole)
     
     #może zrobić to enum'em
     #[home, library, liked, admin, search, user]
@@ -413,6 +417,21 @@ class MainWindow(QMainWindow):
             self.ui.artist_pseudonim_field.setText(result['pseudonim'])
             self.ui.artist_description_field.setText(result['description'])
         self.ui.artist_id_field.currentIndexChanged.connect(lambda: on_artist_id_field_option_change(self.ui.artist_id_field.currentIndex()))
+        #dane do edytowania utworów
+        def on_song_id_field_option_change(index):
+            query = "SELECT title, genre, artist, album, status FROM utwory WHERE song_id = ?"
+            db.execute(query, (self.ui.song_id_field.itemData(index, Qt.UserRole),))
+            result = db.fetchone()
+            self.ui.song_title_field.setText(result['title'])
+            self.ui.song_genre_field.setCurrentIndex(self.ui.song_genre_field.findData(result['genre'], Qt.UserRole))
+            self.ui.song_artist_field.setCurrentIndex(self.ui.song_artist_field.findData(result['artist'], Qt.UserRole))
+            self.ui.song_album_field.setCurrentIndex(self.ui.song_album_field.findData(result['album'], Qt.UserRole))
+            if result['status'] == "Published":
+                self.ui.is_published.setChecked(True)
+            else:
+                self.ui.is_published.setChecked(False)
+        self.ui.song_id_field.currentIndexChanged.connect(lambda: on_song_id_field_option_change(self.ui.song_id_field.currentIndex()))
+
     def on_search_button_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(4)
         search_text = self.ui.search_line.text().strip()
@@ -473,6 +492,34 @@ class MainWindow(QMainWindow):
         db.execute(query, (id_artist,))
         conn.commit()
 
+    def on_song_add_clicked(self):
+        title = self.ui.song_title_field.text()
+        genre = self.ui.song_genre_field.itemData(self.ui.song_genre_field.currentIndex(), Qt.UserRole)
+        artist = self.ui.song_artist_field.itemData(self.ui.song_artist_field.currentIndex(), Qt.UserRole)
+        album = self.ui.song_album_field.itemData(self.ui.song_album_field.currentIndex(), Qt.UserRole)
+        if self.ui.is_published.isChecked():
+            status = "Published"
+        else:
+            status = "Unpublished"
+        song = Songs(title, genre, artist, album, status)
+        song.create() #relacja tworzy się automatycznie w klasie
+    def on_song_edit_clicked(self):
+        id_utworu = self.ui.song_id_field.itemData(self.ui.song_id_field.currentIndex(), Qt.UserRole)
+        title = self.ui.song_title_field.text()
+        genre = self.ui.song_genre_field.itemData(self.ui.song_genre_field.currentIndex(), Qt.UserRole)
+        artist = self.ui.song_artist_field.itemData(self.ui.song_artist_field.currentIndex(), Qt.UserRole)
+        album = self.ui.song_album_field.itemData(self.ui.song_album_field.currentIndex(), Qt.UserRole)
+        if self.ui.is_published.isChecked():
+            status = "Published"
+        else:
+            status = "Unpublished"
+        song = Songs(title, genre, artist, album, status, id_utworu)
+        song.update()
+    def on_song_delete_clicked(self):
+        id_utworu = self.ui.song_id_field.itemData(self.ui.song_id_field.currentIndex(), Qt.UserRole)
+        query = "DELETE FROM utwory WHERE song_id = ?"
+        db.execute(query, (id_utworu,))
+        conn.commit()
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
     def __init__(self):
@@ -540,7 +587,10 @@ if __name__ == "__main__":
         app.setStyleSheet(stream.readAll())
 
         login_window.successful_login.connect(window.show)
-        login_window.successful_login.connect(window.show_admin)
+        login_window.successful_login.connect(window.admin_access)
+
+
+        
         login_window.show()
         sys.exit(app.exec_())
         #conn.close() przy zamykaniu applikacji
