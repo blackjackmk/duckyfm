@@ -168,22 +168,12 @@ class Admin(User):
             db.execute(query, (admin_to_fire,))
         conn.commit()
         
-    def resignation(self):
+    def resignation(self, zastepca):
         #moze sam zrezygnowac, ale uwaga: musi wskazac kogos innego z listy
-        zastepca = input("Podaj id swojego zastępcy: ")
-        #check is user exist
-        db.execute('SELECT COUNT(*) AS user_count FROM users WHERE user_id = ?', (zastepca,))
-        result = db.fetchone()
-
-        if result[0] > 0:
-            #exist
-            query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
-            db.execute(query, (zastepca,))
-            query = "UPDATE users SET is_admin = 0 WHERE user_id = ?"
-            db.execute(query, (self.id,))
-        else:
-            #doesn't exist
-            print("Taki id nie istnieje")
+        query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
+        db.execute(query, (zastepca,))
+        query = "UPDATE users SET is_admin = 0 WHERE user_id = ?"
+        db.execute(query, (self.id,))
         conn.commit()
 
 

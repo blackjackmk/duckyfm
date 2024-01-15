@@ -588,6 +588,12 @@ class Ui_MainWindow(object):
         self.admin_id_field.setSizePolicy(sizePolicy)
         self.admin_id_field.setObjectName("admin_id_field")
         self.formLayout_4.setWidget(0, QtWidgets.QFormLayout.FieldRole, self.admin_id_field)
+        self.users_id = QtWidgets.QLabel(self.admins_admin)
+        self.users_id.setObjectName("users_id")
+        self.formLayout_4.setWidget(1, QtWidgets.QFormLayout.LabelRole, self.users_id)
+        self.user_id_field = QtWidgets.QComboBox(self.admins_admin)
+        self.user_id_field.setObjectName("user_id_field")
+        self.formLayout_4.setWidget(1, QtWidgets.QFormLayout.FieldRole, self.user_id_field)
         self.verticalLayout_15.addLayout(self.formLayout_4)
         self.horizontalLayout_2 = QtWidgets.QHBoxLayout()
         self.horizontalLayout_2.setObjectName("horizontalLayout_2")
@@ -911,7 +917,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(3)
-        self.toolBox.setCurrentIndex(1)
+        self.toolBox.setCurrentIndex(3)
         self.collapse.toggled['bool'].connect(self.sidebar_full.setVisible) # type: ignore
         self.collapse.toggled['bool'].connect(self.sidebar_icon.setHidden) # type: ignore
         self.collapse_2.toggled['bool'].connect(self.sidebar_icon.setVisible) # type: ignore
@@ -966,6 +972,7 @@ class Ui_MainWindow(object):
         self.artist_delete.setText(_translate("MainWindow", "Delete"))
         self.toolBox.setItemText(self.toolBox.indexOf(self.artist_admin), _translate("MainWindow", "Artist"))
         self.admin_id.setText(_translate("MainWindow", "Admin ID:"))
+        self.users_id.setText(_translate("MainWindow", "User ID (to awans)"))
         self.resign_btn.setText(_translate("MainWindow", "Resignate"))
         self.awans_btn.setText(_translate("MainWindow", "Awans"))
         self.fire_btn.setText(_translate("MainWindow", "Delete"))

@@ -10,7 +10,7 @@ from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
-from classes import Artist, Songs, Plyty
+from classes import Artist, Songs, Plyty, Admin
 from default_base import db, conn
 
 global CurrentUser
@@ -101,6 +101,12 @@ class MainWindow(QMainWindow):
                 for i, (user_id, username) in enumerate(get_admins):
                     self.ui.admin_id_field.insertItem(i, username)
                     self.ui.admin_id_field.setItemData(i, user_id, Qt.UserRole)
+                #załadować id uzerów do user_id_field
+                db.execute("SELECT user_id, username FROM users WHERE is_admin = 0")
+                get_users = db.fetchall()
+                for i, (user_id, username) in enumerate(get_users):
+                    self.ui.user_id_field.insertItem(i, username)
+                    self.ui.user_id_field.setItemData(i, user_id, Qt.UserRole)
     
     #może zrobić to enum'em
     #[home, library, liked, admin, search, user]
@@ -520,6 +526,11 @@ class MainWindow(QMainWindow):
         query = "DELETE FROM utwory WHERE song_id = ?"
         db.execute(query, (id_utworu,))
         conn.commit()
+
+    def on_resign_btn_clicked(self):#make confirmation
+        zastepca = self.ui.user_id_field.itemData(self.ui.user_id_field.currentIndex(), Qt.UserRole)    
+        CurrentUser.resignation(zastepca)
+
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
     def __init__(self):
