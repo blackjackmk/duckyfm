@@ -530,6 +530,9 @@ class MainWindow(QMainWindow):
     def on_resign_btn_clicked(self):#make confirmation
         zastepca = self.ui.user_id_field.itemData(self.ui.user_id_field.currentIndex(), Qt.UserRole)    
         CurrentUser.resignation(zastepca)
+    def on_awans_btn_clicked(self):
+        nowy_admin = self.ui.user_id_field.itemData(self.ui.user_id_field.currentIndex(), Qt.UserRole)
+        CurrentUser.awans(nowy_admin)
 
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
