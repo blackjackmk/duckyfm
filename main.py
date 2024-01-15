@@ -3,6 +3,7 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QWi
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QFile, QTextStream
 import sys
 import os
+from functools import partial
 
 sys.path.insert(0, './gui') #import _ui.py files
 from mainscreen_ui import Ui_MainWindow
@@ -48,7 +49,7 @@ class MainWindow(QMainWindow):
         #language change
         self.ui.language_combo.currentIndexChanged.connect(lambda: self.change_language(self.ui.language_combo.currentIndex()))
         self.ui.trans = QtCore.QTranslator(self)
-        self.admin_access_connected = False  # Add a flag
+        self.admin_loaded = False
         
         self.ui.retranslateUi(self)
         
@@ -61,52 +62,12 @@ class MainWindow(QMainWindow):
         self.ui.retranslateUi(self)
 
     def admin_access(self):
-        if not self.admin_access_connected:
+        if not self.admin_loaded:
             if CurrentUser.is_admin:
                 self.ui.addmin.show()
                 self.ui.addmin_2.show()
-                #załadować id albumów do album_id_field, song_album_field
-                db.execute("SELECT album_id, title FROM plyty")
-                get_albums = db.fetchall()
-                for i, (album_id, title) in enumerate(get_albums):
-                    self.ui.album_id_field.insertItem(i, title)
-                    #self.ui.album_id_field.setItemData(i, album_id, Qt.UserRole)
-                    #self.ui.song_album_field.insertItem(i, title)
-                    self.ui.song_album_field.setItemData(i, album_id, Qt.UserRole)
-                #załadować z bazy listę stylów muzyki z indeksami do genre_field, song_genre_field
-                db.execute("SELECT id_genre, title FROM genre")
-                get_genres = db.fetchall()
-                for i, (id_genre, title) in enumerate(get_genres):
-                    self.ui.genre_field.insertItem(i, title)
-                    self.ui.genre_field.setItemData(i, id_genre, Qt.UserRole)
-                    self.ui.song_genre_field.insertItem(i, title)
-                    self.ui.song_genre_field.setItemData(i, id_genre, Qt.UserRole)
-                #załadować id piosenek do song_id_field
-                db.execute("SELECT song_id, title FROM utwory")
-                get_songs = db.fetchall()
-                for i, (song_id, title) in enumerate(get_songs):
-                    self.ui.song_id_field.insertItem(i, title)
-                    self.ui.song_id_field.setItemData(i, song_id, Qt.UserRole)
-                #załadować id arystów do artist_id_field, song_artist_field
-                db.execute("SELECT artist_id, pseudonim FROM tworcy")
-                get_artists = db.fetchall()
-                for i, (artist_id, pseudonim) in enumerate(get_artists):
-                    self.ui.artist_id_field.insertItem(i, pseudonim)
-                    self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
-                    self.ui.song_artist_field.insertItem(i, pseudonim)
-                    self.ui.song_artist_field.setItemData(i, artist_id, Qt.UserRole)
-                #załadować id adminów do admin_id_field
-                db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
-                get_admins = db.fetchall()
-                for i, (user_id, username) in enumerate(get_admins):
-                    self.ui.admin_id_field.insertItem(i, username)
-                    self.ui.admin_id_field.setItemData(i, user_id, Qt.UserRole)
-                #załadować id uzerów do user_id_field
-                db.execute("SELECT user_id, username FROM users WHERE is_admin = 0")
-                get_users = db.fetchall()
-                for i, (user_id, username) in enumerate(get_users):
-                    self.ui.user_id_field.insertItem(i, username)
-                    self.ui.user_id_field.setItemData(i, user_id, Qt.UserRole)
+                self.admin_combo_fill()
+                self.admin_loaded = True
     
     #może zrobić to enum'em
     #[home, library, liked, admin, search, user]
@@ -391,6 +352,49 @@ class MainWindow(QMainWindow):
                 self.ui.search_singer.setText("Radiohead")
                 self.ui.search_artist.addWidget(self.ui.search_singer, r, c, 1, 1)
 
+    def admin_combo_fill(self):
+        #załadować id albumów do album_id_field, song_album_field
+        db.execute("SELECT album_id, title FROM plyty")
+        get_albums = db.fetchall()
+        for i, (album_id, title) in enumerate(get_albums):
+            self.ui.album_id_field.insertItem(i, title)
+            self.ui.album_id_field.setItemData(i, album_id, Qt.UserRole)
+            self.ui.song_album_field.insertItem(i, title)
+            self.ui.song_album_field.setItemData(i, album_id, Qt.UserRole)
+        #załadować z bazy listę stylów muzyki z indeksami do genre_field, song_genre_field
+        db.execute("SELECT id_genre, title FROM genre")
+        get_genres = db.fetchall()
+        for i, (id_genre, title) in enumerate(get_genres):
+            self.ui.genre_field.insertItem(i, title)
+            self.ui.genre_field.setItemData(i, id_genre, Qt.UserRole)
+            self.ui.song_genre_field.insertItem(i, title)
+            self.ui.song_genre_field.setItemData(i, id_genre, Qt.UserRole)
+        #załadować id piosenek do song_id_field
+        db.execute("SELECT song_id, title FROM utwory")
+        get_songs = db.fetchall()
+        for i, (song_id, title) in enumerate(get_songs):
+            self.ui.song_id_field.insertItem(i, title)
+            self.ui.song_id_field.setItemData(i, song_id, Qt.UserRole)
+        #załadować id arystów do artist_id_field, song_artist_field
+        db.execute("SELECT artist_id, pseudonim FROM tworcy")
+        get_artists = db.fetchall()
+        for i, (artist_id, pseudonim) in enumerate(get_artists):
+            self.ui.artist_id_field.insertItem(i, pseudonim)
+            self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
+            self.ui.song_artist_field.insertItem(i, pseudonim)
+            self.ui.song_artist_field.setItemData(i, artist_id, Qt.UserRole)
+        #załadować id adminów do admin_id_field
+        db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
+        get_admins = db.fetchall()
+        for i, (user_id, username) in enumerate(get_admins):
+            self.ui.admin_id_field.insertItem(i, username)
+            self.ui.admin_id_field.setItemData(i, user_id, Qt.UserRole)
+        #załadować id uzerów do user_id_field
+        db.execute("SELECT user_id, username FROM users WHERE is_admin = 0")
+        get_users = db.fetchall()
+        for user_id, username in get_users:
+            self.ui.user_id_field.addItem(username, userData=user_id)
+
 
     #funkcje do przycisków sidebaru
     #oba przyciski są połączone, więc wystarczy zaprogramować tylko jeden
@@ -553,6 +557,7 @@ class LoginScreen(QDialog):
         CurrentUser = logowanie(username, password)
         if CurrentUser:
             self.successful_login.emit()
+            window.admin_access()
             self.close()
         else:
             self.ui.error.setText("Login error")
@@ -604,10 +609,7 @@ if __name__ == "__main__":
         app.setStyleSheet(stream.readAll())
 
         login_window.successful_login.connect(window.show)
-        login_window.successful_login.connect(window.admin_access)
 
-
-        
         login_window.show()
         sys.exit(app.exec_())
         #conn.close() przy zamykaniu applikacji
