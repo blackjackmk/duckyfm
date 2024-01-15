@@ -533,6 +533,9 @@ class MainWindow(QMainWindow):
     def on_awans_btn_clicked(self):
         nowy_admin = self.ui.user_id_field.itemData(self.ui.user_id_field.currentIndex(), Qt.UserRole)
         CurrentUser.awans(nowy_admin)
+    def on_fire_btn_clicked(self):
+        zwolniony = self.ui.admin_id_field.itemData(self.ui.admin_id_field.currentIndex(), Qt.UserRole)
+        CurrentUser.delete_other_admin(zwolniony)
 
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
