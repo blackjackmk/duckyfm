@@ -21,11 +21,8 @@ def toggle_stylesheet(style):
         app = QApplication.instance()
         if app is None:
             raise RuntimeError("No Qt Application found.")
-        if style == 0:
-            path = "./gui/light_layout.qss"
-        else:
-            path = "./gui/dark_layout.qss"
-        file = QFile(path)
+        style_paths = ["./gui/light_layout.qss", "./gui/dark_layout.qss"]
+        file = QFile(style_paths[style])
         file.open(QFile.ReadOnly | QFile.Text)
         stream = QTextStream(file)
         app.setStyleSheet(stream.readAll())
@@ -44,20 +41,17 @@ class MainWindow(QMainWindow):
         #hide admin
         self.ui.addmin.hide()
         self.ui.addmin_2.hide()
+        self.admin_loaded = False
         #layout style change
         self.ui.theme_combo.currentTextChanged.connect(lambda: toggle_stylesheet(self.ui.theme_combo.currentIndex()))
         #language change
         self.ui.language_combo.currentIndexChanged.connect(lambda: self.change_language(self.ui.language_combo.currentIndex()))
         self.ui.trans = QtCore.QTranslator(self)
-        self.admin_loaded = False
-        
         self.ui.retranslateUi(self)
         
     def change_language(self, language):
-        if language == 0:
-            self.ui.trans.load('./locale/main_en')
-        elif language == 1:
-            self.ui.trans.load('./locale/main_pl')
+        languages = ['./locale/main_en', './locale/main_pl']
+        self.ui.trans.load(languages[language])
         QtWidgets.QApplication.instance().installTranslator(self.ui.trans)
         self.ui.retranslateUi(self)
 
@@ -356,39 +350,31 @@ class MainWindow(QMainWindow):
         #załadować id albumów do album_id_field, song_album_field
         db.execute("SELECT album_id, title FROM plyty")
         get_albums = db.fetchall()
-        for i, (album_id, title) in enumerate(get_albums):
-            self.ui.album_id_field.insertItem(i, title)
-            self.ui.album_id_field.setItemData(i, album_id, Qt.UserRole)
-            self.ui.song_album_field.insertItem(i, title)
-            self.ui.song_album_field.setItemData(i, album_id, Qt.UserRole)
+        for album_id, title in get_albums:
+            self.ui.album_id_field.addItem(title, userData=album_id)
+            self.ui.song_album_field.addItem(title, userData=album_id)
         #załadować z bazy listę stylów muzyki z indeksami do genre_field, song_genre_field
         db.execute("SELECT id_genre, title FROM genre")
         get_genres = db.fetchall()
-        for i, (id_genre, title) in enumerate(get_genres):
-            self.ui.genre_field.insertItem(i, title)
-            self.ui.genre_field.setItemData(i, id_genre, Qt.UserRole)
-            self.ui.song_genre_field.insertItem(i, title)
-            self.ui.song_genre_field.setItemData(i, id_genre, Qt.UserRole)
+        for id_genre, title in get_genres:
+            self.ui.genre_field.addItem(title, userData=id_genre)
+            self.ui.song_genre_field.addItem(title, userData=id_genre)
         #załadować id piosenek do song_id_field
         db.execute("SELECT song_id, title FROM utwory")
         get_songs = db.fetchall()
-        for i, (song_id, title) in enumerate(get_songs):
-            self.ui.song_id_field.insertItem(i, title)
-            self.ui.song_id_field.setItemData(i, song_id, Qt.UserRole)
+        for song_id, title in get_songs:
+            self.ui.song_id_field.addItem(title, userData=song_id)
         #załadować id arystów do artist_id_field, song_artist_field
         db.execute("SELECT artist_id, pseudonim FROM tworcy")
         get_artists = db.fetchall()
-        for i, (artist_id, pseudonim) in enumerate(get_artists):
-            self.ui.artist_id_field.insertItem(i, pseudonim)
-            self.ui.artist_id_field.setItemData(i, artist_id, Qt.UserRole)
-            self.ui.song_artist_field.insertItem(i, pseudonim)
-            self.ui.song_artist_field.setItemData(i, artist_id, Qt.UserRole)
+        for artist_id, pseudonim in get_artists:
+            self.ui.artist_id_field.addItem(pseudonim, userData=artist_id)
+            self.ui.song_artist_field.addItem(pseudonim, userData=artist_id)
         #załadować id adminów do admin_id_field
         db.execute("SELECT user_id, username FROM users WHERE is_admin = 1")
         get_admins = db.fetchall()
-        for i, (user_id, username) in enumerate(get_admins):
-            self.ui.admin_id_field.insertItem(i, username)
-            self.ui.admin_id_field.setItemData(i, user_id, Qt.UserRole)
+        for user_id, username in get_admins:
+            self.ui.admin_id_field.addItem(username, userData=user_id)
         #załadować id uzerów do user_id_field
         db.execute("SELECT user_id, username FROM users WHERE is_admin = 0")
         get_users = db.fetchall()
