@@ -20,7 +20,7 @@ class Artist:
         conn.commit()
 
 class Songs:
-    def __init__(self, title=None, genre=None, artist=None, album=None, status=None, id=None): # is always executed when the class is being initiated
+    def __init__(self, title, genre, artist, album, status, id=None): # is always executed when the class is being initiated
         self.title = title
         self.genre = genre
         self.artist = artist
@@ -73,12 +73,18 @@ def song_singer_connect(singer_id,song_id):
     conn.commit()
 
 #przypisanie utworów do płyt
-def songs_to_album(album_id, songs, singer_id = None): #songs to set z id utworów
+def songs_to_album(album_id, singer_id):
     #jeżeli twórca jest podany, to wszystkie piosenki w albumie będą należały do niego
-    #dla każdego utworu zmienić pole 'album' na album_id
-    for song in songs:
-        s = Songs(None,None,singer_id,album_id,None,song)
-        s.update()
+    query = "SELECT song_id FROM utwory WHERE album = ?"
+    db.execute(query, (album_id,))
+    songs_in_album = db.fetchall()
+    #dla każdego utworu zmienić pole 'artist' na singer_id
+    for song in songs_in_album:
+        query2 = "UPDATE utwory artist = ? WHERE song_id = ?"
+        db.execute(query2, (singer_id, song['song_id']))
+        query3 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ? WHERE id_utworu = ?"
+        db.execute(query3, (singer_id, song['song_id']))
+        conn.commit()
 
 class User:
     def __init__(self, username, is_admin, id):

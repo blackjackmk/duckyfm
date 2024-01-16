@@ -10,7 +10,7 @@ from login_ui import Ui_Form
 from register_ui import Ui_Form as SignUp_Ui_Form
 
 from login import logowanie, rejestracja
-from classes import Artist, Songs, Plyty, Admin
+from classes import Artist, Songs, Plyty, Admin, songs_to_album
 from default_base import db, conn
 
 global CurrentUser
@@ -513,6 +513,8 @@ class MainWindow(QMainWindow):
             status = "Unpublished"
         song = Songs(title, genre, artist, album, status)
         song.create() #relacja tworzy się automatycznie w klasie
+        if artist and album:#jeżeli twórca i album są podane, to wszystkie piosenki w albumie będą należały do niego
+            songs_to_album(album, artist)
     def on_song_edit_clicked(self):
         id_utworu = self.ui.song_id_field.itemData(self.ui.song_id_field.currentIndex(), Qt.UserRole)
         title = self.ui.song_title_field.text()
