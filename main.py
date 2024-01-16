@@ -3,7 +3,6 @@ from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QDialog, QWi
 from PyQt5.QtCore import Qt, pyqtSlot, pyqtSignal, QFile, QTextStream
 import sys
 import os
-from functools import partial
 
 sys.path.insert(0, './gui') #import _ui.py files
 from mainscreen_ui import Ui_MainWindow
@@ -466,7 +465,7 @@ class MainWindow(QMainWindow):
         CurrentUser.email = self.ui.email.text()
         CurrentUser.adress = self.ui.addres.toPlainText()
         CurrentUser.update_user_info()
-
+    @pyqtSlot()
     def on_album_add_btn_clicked(self):
         title = self.ui.title_field.text()
         description = self.ui.description_field.toPlainText()
@@ -485,7 +484,7 @@ class MainWindow(QMainWindow):
         query = "DELETE FROM plyty WHERE album_id = ?"
         db.execute(query, (id_albumu,))
         conn.commit()
-
+    @pyqtSlot()
     def on_artist_add_clicked(self):
         name = self.ui.artist_pseudonim_field.text()
         description = self.ui.artist_description_field.toPlainText()
@@ -502,7 +501,7 @@ class MainWindow(QMainWindow):
         query = "DELETE FROM tworcy WHERE artist_id = ?"
         db.execute(query, (id_artist,))
         conn.commit()
-
+    @pyqtSlot()
     def on_song_add_clicked(self):
         title = self.ui.song_title_field.text()
         genre = self.ui.song_genre_field.itemData(self.ui.song_genre_field.currentIndex(), Qt.UserRole)

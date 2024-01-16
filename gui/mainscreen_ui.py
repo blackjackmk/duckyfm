@@ -561,6 +561,7 @@ class Ui_MainWindow(object):
         self.artist_description_field.setObjectName("artist_description_field")
         self.formLayout_3.setWidget(2, QtWidgets.QFormLayout.FieldRole, self.artist_description_field)
         self.artist_add = QtWidgets.QPushButton(self.artist_admin)
+        self.artist_add.setCheckable(False)
         self.artist_add.setObjectName("artist_add")
         self.formLayout_3.setWidget(3, QtWidgets.QFormLayout.LabelRole, self.artist_add)
         self.artist_edit = QtWidgets.QPushButton(self.artist_admin)
@@ -922,7 +923,7 @@ class Ui_MainWindow(object):
 
         self.retranslateUi(MainWindow)
         self.stackedWidget.setCurrentIndex(3)
-        self.toolBox.setCurrentIndex(3)
+        self.toolBox.setCurrentIndex(2)
         self.collapse.toggled['bool'].connect(self.sidebar_full.setVisible) # type: ignore
         self.collapse.toggled['bool'].connect(self.sidebar_icon.setHidden) # type: ignore
         self.collapse_2.toggled['bool'].connect(self.sidebar_icon.setVisible) # type: ignore

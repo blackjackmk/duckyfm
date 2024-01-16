@@ -875,7 +875,7 @@
               </sizepolicy>
              </property>
              <property name="currentIndex">
-              <number>3</number>
+              <number>2</number>
              </property>
              <widget class="QWidget" name="albums_admin">
               <property name="geometry">
@@ -1174,6 +1174,9 @@
                 <widget class="QPushButton" name="artist_add">
                  <property name="text">
                   <string>Add</string>
+                 </property>
+                 <property name="checkable">
+                  <bool>false</bool>
                  </property>
                 </widget>
                </item>
