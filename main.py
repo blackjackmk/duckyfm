@@ -394,38 +394,53 @@ class MainWindow(QMainWindow):
     def on_liked_toggled(self):
         self.ui.stackedWidget.setCurrentIndex(2)
         self.liked_fill()
-    def on_addmin_toggled(self):
+    def on_addmin_toggled(self):#dane do edytowania
         self.ui.stackedWidget.setCurrentIndex(3)
         #dane do edytowania albumów
         def on_album_id_field_option_change(index):
-            query = "SELECT title, description, genre FROM plyty WHERE album_id = ?"
-            db.execute(query, (self.ui.album_id_field.itemData(index, Qt.UserRole),))
-            result = db.fetchone()
-            self.ui.title_field.setText(result['title'])
-            self.ui.description_field.setText(result['description'])
-            self.ui.genre_field.setCurrentIndex(self.ui.genre_field.findData(result['genre'], Qt.UserRole))
+            if index != 0:
+                query = "SELECT title, description, genre FROM plyty WHERE album_id = ?"
+                db.execute(query, (self.ui.album_id_field.itemData(index, Qt.UserRole),))
+                result = db.fetchone()
+                self.ui.title_field.setText(result['title'])
+                self.ui.description_field.setText(result['description'])
+                self.ui.genre_field.setCurrentIndex(self.ui.genre_field.findData(result['genre'], Qt.UserRole))
+            else:
+                self.ui.title_field.setText("")
+                self.ui.description_field.setText("")
+                self.ui.genre_field.setCurrentIndex(0)
         self.ui.album_id_field.currentIndexChanged.connect(lambda: on_album_id_field_option_change(self.ui.album_id_field.currentIndex()))
         #dane do edytowania twórców
         def on_artist_id_field_option_change(index):
-            query = "SELECT pseudonim, description FROM tworcy WHERE artist_id = ?"
-            db.execute(query, (self.ui.artist_id_field.itemData(index, Qt.UserRole),))
-            result = db.fetchone()
-            self.ui.artist_pseudonim_field.setText(result['pseudonim'])
-            self.ui.artist_description_field.setText(result['description'])
+            if index != 0:
+                query = "SELECT pseudonim, description FROM tworcy WHERE artist_id = ?"
+                db.execute(query, (self.ui.artist_id_field.itemData(index, Qt.UserRole),))
+                result = db.fetchone()
+                self.ui.artist_pseudonim_field.setText(result['pseudonim'])
+                self.ui.artist_description_field.setText(result['description'])
+            else:
+                self.ui.artist_pseudonim_field.setText("")
+                self.ui.artist_description_field.setText("")
         self.ui.artist_id_field.currentIndexChanged.connect(lambda: on_artist_id_field_option_change(self.ui.artist_id_field.currentIndex()))
         #dane do edytowania utworów
         def on_song_id_field_option_change(index):
-            query = "SELECT title, genre, artist, album, status FROM utwory WHERE song_id = ?"
-            db.execute(query, (self.ui.song_id_field.itemData(index, Qt.UserRole),))
-            result = db.fetchone()
-            self.ui.song_title_field.setText(result['title'])
-            self.ui.song_genre_field.setCurrentIndex(self.ui.song_genre_field.findData(result['genre'], Qt.UserRole))
-            self.ui.song_artist_field.setCurrentIndex(self.ui.song_artist_field.findData(result['artist'], Qt.UserRole))
-            self.ui.song_album_field.setCurrentIndex(self.ui.song_album_field.findData(result['album'], Qt.UserRole))
-            if result['status'] == "Published":
-                self.ui.is_published.setChecked(True)
+            if index != 0:
+                query = "SELECT title, genre, artist, album, status FROM utwory WHERE song_id = ?"
+                db.execute(query, (self.ui.song_id_field.itemData(index, Qt.UserRole),))
+                result = db.fetchone()
+                self.ui.song_title_field.setText(result['title'])
+                self.ui.song_genre_field.setCurrentIndex(self.ui.song_genre_field.findData(result['genre'], Qt.UserRole))
+                self.ui.song_artist_field.setCurrentIndex(self.ui.song_artist_field.findData(result['artist'], Qt.UserRole))
+                self.ui.song_album_field.setCurrentIndex(self.ui.song_album_field.findData(result['album'], Qt.UserRole))
+                if result['status'] == "Published":
+                    self.ui.is_published.setChecked(True)
+                else:
+                    self.ui.is_published.setChecked(False)
             else:
-                self.ui.is_published.setChecked(False)
+                self.ui.song_title_field.setText("")
+                self.ui.song_genre_field.setCurrentIndex(0)
+                self.ui.song_artist_field.setCurrentIndex(0)
+                self.ui.song_album_field.setCurrentIndex(0)
         self.ui.song_id_field.currentIndexChanged.connect(lambda: on_song_id_field_option_change(self.ui.song_id_field.currentIndex()))
 
     def on_search_button_clicked(self):
