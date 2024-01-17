@@ -35,6 +35,8 @@ class Songs:
         createtime = teraz.strftime("%Y-%m-%d %H:%M:%S")
         db.execute(query, (self.title, self.genre, self.artist, self.album, createtime))
         conn.commit()
+        db.execute("SELECT IDENT_CURRENT('utwory')")
+        self.id = db.fetchone()[0]
         query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
         db.execute(query, (self.artist, self.id))
         conn.commit()
@@ -80,8 +82,9 @@ def songs_to_album(album_id, singer_id):
     songs_in_album = db.fetchall()
     #dla każdego utworu zmienić pole 'artist' na singer_id
     for song in songs_in_album:
-        query2 = "UPDATE utwory artist = ? WHERE song_id = ?"
+        query2 = "UPDATE utwory SET artist = ? WHERE song_id = ?"
         db.execute(query2, (singer_id, song['song_id']))
+        conn.commit()
         query3 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ? WHERE id_utworu = ?"
         db.execute(query3, (singer_id, song['song_id']))
         conn.commit()
