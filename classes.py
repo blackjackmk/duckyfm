@@ -108,23 +108,23 @@ class User:
 
     liked_albums = ()
     def get_liked_albums(self):
-        query = "SELECT id_album FROM ulubione_plyty WHERE id_usera = ?"
+        query = "SELECT ulubione_plyty.id_album, plyty.title, plyty.description FROM ulubione_plyty INNER JOIN plyty ON ulubione_plyty.id_album = plyty.album_id WHERE ulubione_plyty.id_usera = ?"
         db.execute(query, (self.id,))
         rows = db.fetchall()
         for row in rows:
-            self.liked_albums.append(row.id_album)
+            self.liked_albums.append({"album_id":row['id_album'], "title":row['title'], "description":row['description']})
     def like_album(self, album_id):
         self.liked_albums.append(album_id)
     def dislike_album(self, album_id):
         self.liked_albums.remove(album_id)
 
-    liked_songs = ()
+    liked_songs = []
     def get_liked_songs(self):
-        query = "SELECT id_utworu FROM ulubione_utwory WHERE id_usera = ?"
+        query = "SELECT ulubione_utwory.id_utworu, utwory.title, tworcy.pseudonim FROM ulubione_utwory INNER JOIN utwory ON ulubione_utwory.id_utworu = utwory.song_id INNER JOIN tworcy ON utwory.artist = tworcy.artist_id WHERE ulubione_utwory.id_usera = ?"
         db.execute(query, (self.id,))
         rows = db.fetchall()
         for row in rows:
-            self.liked_songs.append(row.id_album)
+            self.liked_songs.append({"song_id":row['id_utworu'], "title":row['title'], "artist":row['pseudonim']})
     def like_song(self, song_id):
         self.liked_songs.append(song_id)
     def dislike_album(self, song_id):
@@ -145,7 +145,7 @@ class User:
             db.execute(query, (self.id, song_id))
 
         # Insert the new list of liked albums into the database
-        for album_id in self.liked_albums:
+        for album_id in self.liked_albums['album_id']:
             query = "INSERT INTO ulubione_plyty (id_usera, id_album) VALUES (?, ?)"
             db.execute(query, (self.id, album_id))
 
