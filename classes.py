@@ -106,7 +106,7 @@ class User:
         self.email = result['email']
         self.adress = result['adress']
 
-    liked_albums = ()
+    liked_albums = []
     def get_liked_albums(self):
         query = "SELECT ulubione_plyty.id_album, plyty.title, plyty.description FROM ulubione_plyty INNER JOIN plyty ON ulubione_plyty.id_album = plyty.album_id WHERE ulubione_plyty.id_usera = ?"
         db.execute(query, (self.id,))
