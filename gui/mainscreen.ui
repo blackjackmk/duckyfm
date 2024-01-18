@@ -636,7 +636,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>0</number>
+          <number>4</number>
          </property>
          <widget class="QWidget" name="home_page">
           <property name="styleSheet">
@@ -772,7 +772,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>98</width>
+                <width>81</width>
                 <height>38</height>
                </rect>
               </property>
@@ -824,7 +824,7 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>98</width>
+                <width>63</width>
                 <height>38</height>
                </rect>
               </property>
@@ -1340,26 +1340,11 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>106</width>
-                <height>171</height>
+                <width>786</width>
+                <height>456</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_42">
-               <item>
-                <widget class="QLabel" name="search_label">
-                 <property name="font">
-                  <font>
-                   <pointsize>20</pointsize>
-                  </font>
-                 </property>
-                 <property name="text">
-                  <string>Songs</string>
-                 </property>
-                </widget>
-               </item>
-               <item>
-                <layout class="QVBoxLayout" name="song_search_container"/>
-               </item>
                <item>
                 <widget class="QLabel" name="search_label_2">
                  <property name="font">
@@ -1373,7 +1358,22 @@
                 </widget>
                </item>
                <item>
-                <widget class="QFrame" name="albums_search_container">
+                <layout class="QVBoxLayout" name="albums_search_container"/>
+               </item>
+               <item>
+                <widget class="QLabel" name="search_label">
+                 <property name="font">
+                  <font>
+                   <pointsize>20</pointsize>
+                  </font>
+                 </property>
+                 <property name="text">
+                  <string>Songs</string>
+                 </property>
+                </widget>
+               </item>
+               <item>
+                <widget class="QFrame" name="songs_search_container">
                  <property name="frameShape">
                   <enum>QFrame::StyledPanel</enum>
                  </property>
