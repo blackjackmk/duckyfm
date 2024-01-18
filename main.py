@@ -259,7 +259,14 @@ class MainWindow(QMainWindow):
     def search_songs_fill(self, search_text):
         for i in reversed(range(self.ui.song_search_container.count())): 
             self.ui.song_search_container.itemAt(i).widget().setParent(None)
-        for l in range(2):
+        search_text = "%"+search_text+"%"
+        query = "SELECT utwory.title, tworcy.pseudonim FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id WHERE utwory.title LIKE ? ORDER BY song_id DESC"
+        db.execute(query, (search_text,))
+        ss = []
+        rows = db.fetchall()
+        for row in rows:
+            ss.append({"title":row['title'], "artist":row['artist']})
+        for l in range(len(ss)):
             self.ui.search_song_info = QtWidgets.QWidget(self.ui.scrollAreaWidgetContents_4)
             self.ui.search_song_info.setObjectName("search_song_info")
             self.ui.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.ui.search_song_info)
@@ -294,8 +301,8 @@ class MainWindow(QMainWindow):
             self.ui.verticalLayout_18.addWidget(self.ui.song_autor)
             self.ui.horizontalLayout_4.addWidget(self.ui.info)
             self.ui.song_search_container.addWidget(self.ui.search_song_info)
-            self.ui.song_title.setText(search_text)
-            self.ui.song_autor.setText("Autor")
+            self.ui.song_title.setText(ss[l]['title'])
+            self.ui.song_autor.setText(ss[l]['artist'])
     
     def search_albums_fill(self, search_text):
         for i in reversed(range(self.ui.gridLayout_5.count())): 
@@ -453,7 +460,7 @@ class MainWindow(QMainWindow):
                 self.ui.song_artist_field.setCurrentIndex(0)
                 self.ui.song_album_field.setCurrentIndex(0)
         self.ui.song_id_field.currentIndexChanged.connect(lambda: on_song_id_field_option_change(self.ui.song_id_field.currentIndex()))
-
+    @pyqtSlot()
     def on_search_button_clicked(self):
         self.ui.stackedWidget.setCurrentIndex(4)
         search_text = self.ui.search_line.text().strip()
