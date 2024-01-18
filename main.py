@@ -108,7 +108,14 @@ class MainWindow(QMainWindow):
     def discover_fill(self):
         for i in reversed(range(self.ui.gridLayout_4.count())): 
             self.ui.gridLayout_4.itemAt(i).widget().setParent(None)
-        for r in range(3): #row
+        db.execute("SELECT utwory.title, tworcy.pseudonim FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id ORDER BY song_id DESC")
+        discovery = []
+        rows = db.fetchall()
+        num_rows = ((db.rowcount+1)//5)+1
+        for row in rows:
+            discovery.append({"title":row['title'], "artist":row['artist']})
+        n = 0
+        for r in range(num_rows): #row
             for c in range(5): #col
                 self.ui.song_card = QtWidgets.QWidget(self.ui.home_container)
                 self.ui.song_card.setObjectName("song_card")
@@ -145,9 +152,10 @@ class MainWindow(QMainWindow):
                 self.ui.artist.setFont(font)
                 self.ui.artist.setObjectName("artist_2")
                 self.ui.verticalLayout_7.addWidget(self.ui.artist)
-                self.ui.song_title.setText("Cinema City")
-                self.ui.artist.setText("Gibbs")
+                self.ui.song_title.setText(discovery[n]['title'])
+                self.ui.artist.setText(discovery[n]['artist'])
                 self.ui.gridLayout_4.addWidget(self.ui.song_card, r, c, 1, 1)
+                n += 1
 
     def library_fill(self):
         for i in reversed(range(self.ui.gridLayout_2.count())): 
