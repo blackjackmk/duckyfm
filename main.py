@@ -337,18 +337,23 @@ class MainWindow(QMainWindow):
     def search_artist_fill(self, search_text):
         for i in reversed(range(self.ui.search_artist.count())): 
             self.ui.search_artist.itemAt(i).widget().setParent(None)
-        for r in range(2): #row
-            for c in range(3): #col
-                self.ui.search_singer = QtWidgets.QPushButton(self.ui.scrollAreaWidgetContents_4)
-                font = QtGui.QFont()
-                font.setPointSize(14)
-                self.ui.search_singer.setFont(font)
-                self.ui.search_singer.setStyleSheet("")
-                self.ui.search_singer.setIcon(self.ui.icon8)
-                self.ui.search_singer.setIconSize(QtCore.QSize(30, 30))
-                self.ui.search_singer.setObjectName("search_singer")
-                self.ui.search_singer.setText("Radiohead")
-                self.ui.search_artist.addWidget(self.ui.search_singer, r, c, 1, 1)
+        search_text = "%"+search_text+"%"
+        query = "SELECT pseudonim FROM tworcy WHERE pseudonim LIKE ?"
+        db.execute(query, (search_text,))
+        rows = db.fetchall()
+        n = 0
+        for row in rows:
+            self.ui.search_singer = QtWidgets.QPushButton(self.ui.scrollAreaWidgetContents_4)
+            font = QtGui.QFont()
+            font.setPointSize(14)
+            self.ui.search_singer.setFont(font)
+            self.ui.search_singer.setStyleSheet("")
+            self.ui.search_singer.setIcon(self.ui.icon8)
+            self.ui.search_singer.setIconSize(QtCore.QSize(30, 30))
+            self.ui.search_singer.setObjectName("search_singer")
+            self.ui.search_singer.setText(row['pseudonim'])
+            self.ui.search_artist.addWidget(self.ui.search_singer, n//3, n%3, 1, 1)
+            n += 1
 
     def admin_combo_fill(self):
         #załadować id albumów do album_id_field, song_album_field
