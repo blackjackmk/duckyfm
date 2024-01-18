@@ -1,7 +1,7 @@
 artist_table = '''CREATE TABLE tworcy ( 
     artist_id INT IDENTITY PRIMARY KEY, 
     pseudonim NVARCHAR (25), 
-    description NVARCHAR (50) )'''
+    description NVARCHAR (100) )'''
 utwory_table = '''CREATE TABLE utwory (
     song_id    INT IDENTITY PRIMARY KEY,
     title      NVARCHAR (30),

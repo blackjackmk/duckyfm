@@ -83,7 +83,11 @@ class MainWindow(QMainWindow):
     def ostatnio_dodane_fill(self):
         for i in reversed(range(self.ui.ostatnio_dodane.count())): 
             self.ui.ostatnio_dodane.itemAt(i).widget().setParent(None)
-        latest = ["Pierwszy", "Drugi", "Trzeci", "Czwarty", "Piąty", "Szósty"]
+        db.execute("SELECT TOP 6 title FROM plyty ORDER BY album_id DESC")
+        latest = []
+        rows = db.fetchall()
+        for row in rows:
+            latest.append(row['title'])
         n = 0
         for r in range(2): #row
             for c in range(3): #col
