@@ -95,6 +95,8 @@ class User:
         self.is_admin = is_admin
         self.id = id
         self.get_personal_info()
+        self.get_liked_songs()
+        self.get_liked_albums()
     
 
     def get_personal_info(self):
