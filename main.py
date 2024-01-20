@@ -83,7 +83,7 @@ class MainWindow(QMainWindow):
     def ostatnio_dodane_fill(self):
         for i in reversed(range(self.ui.ostatnio_dodane.count())): 
             self.ui.ostatnio_dodane.itemAt(i).widget().setParent(None)
-        db.execute("SELECT TOP 6 title FROM plyty ORDER BY album_id DESC")
+        db.execute("SELECT TOP 6 album_id, title FROM plyty ORDER BY album_id DESC")
         rows = db.fetchall()
         n = 0
         for row in rows:
@@ -100,6 +100,34 @@ class MainWindow(QMainWindow):
             self.ui.ostatnio_dodane.addWidget(self.ui.new_album, n//3, n%3, 1, 1)
             self.ui.new_album.setText(row['title'])
             n += 1
+
+            self.ui.new_album.clicked.connect(lambda _, id=row['album_id']: self.on_album_click(id))
+
+
+    def on_album_click(self, id):
+        self.ui.stackedWidget.setCurrentIndex(6)
+        query = "SELECT plyty.title, plyty.description, genre.title AS genre FROM plyty INNER JOIN  genre ON plyty.genre = genre.id_genre WHERE album_id = ?"
+        db.execute(query, (id,))
+        #set album info
+        result = db.fetchone()
+        self.ui.album_title.setText(result['title'])
+        self.ui.album_description.setText(result['description'])
+        self.ui.album_genre.setText(result['genre'])
+        #fill the table
+        query2 = "SELECT utwory.title, genre.title AS genre, tworcy.pseudonim FROM utwory INNER JOIN genre ON utwory.genre = genre.id_genre INNER JOIN tworcy ON utwory.artist = tworcy.artist_id WHERE utwory.album = ?"
+        db.execute(query2, (id,))
+        rows = db.fetchall()
+        # Set the number of rows and columns
+        self.ui.album_songs_table.setRowCount(db.rowcount)
+        self.ui.album_songs_table.setColumnCount(4)
+        for row, (title, genre, artist) in enumerate(rows):
+            item_title = QtWidgets.QTableWidgetItem(title)
+            item_genre = QtWidgets.QTableWidgetItem(genre)
+            item_artist = QtWidgets.QTableWidgetItem(artist)
+            # Set items in the table
+            self.ui.album_songs_table.setItem(row, 0, item_title)
+            self.ui.album_songs_table.setItem(row, 1, item_artist)
+            self.ui.album_songs_table.setItem(row, 2, item_genre)
 
     def discover_fill(self):
         for i in reversed(range(self.ui.gridLayout_4.count())): 
@@ -147,7 +175,7 @@ class MainWindow(QMainWindow):
             self.ui.artist.setText(row['artist'])
             self.ui.gridLayout_4.addWidget(self.ui.song_card, n//5, n%5, 1, 1)
             n += 1
-
+        
     def library_fill(self):
         for i in reversed(range(self.ui.gridLayout_2.count())): 
             self.ui.gridLayout_2.itemAt(i).widget().setParent(None)
@@ -294,7 +322,9 @@ class MainWindow(QMainWindow):
             self.ui.verticalLayout_31.addWidget(self.ui.liked_card_autor)
             self.ui.gridLayout_3.addWidget(self.ui.liked_card, n//5, n%5, 1, 1)
             self.ui.liked_card_title.setText(lik2['title'])
+            #self.ui.liked_card.clicked.connect(lambda _, id=lik2['album_id']: self.on_album_click(id))
             n += 1
+
     def search_songs_fill(self, search_text):
         for i in reversed(range(self.ui.gridLayout_5.count())): 
             self.ui.gridLayout_5.itemAt(i).widget().setParent(None)
@@ -348,7 +378,7 @@ class MainWindow(QMainWindow):
         for i in reversed(range(self.ui.albums_search_container.count())): 
             self.ui.albums_search_container.itemAt(i).widget().setParent(None)
         search_text = "%"+search_text+"%"
-        query = "SELECT title FROM plyty WHERE title LIKE ?"
+        query = "SELECT album_id, title FROM plyty WHERE title LIKE ?"
         db.execute(query, (search_text,))
         rows = db.fetchall()
         for row in rows:
@@ -381,6 +411,7 @@ class MainWindow(QMainWindow):
             self.ui.horizontalLayout_4.addWidget(self.ui.info)
             self.ui.albums_search_container.addWidget(self.ui.search_album_info)
             self.ui.search_album_title.setText(row['title'])
+            #self.ui.search_album_info.clicked.connect(lambda _, id=row['album_id']: self.on_album_click(id))
     
     def search_artist_fill(self, search_text):
         for i in reversed(range(self.ui.search_artist.count())): 
@@ -601,6 +632,7 @@ class MainWindow(QMainWindow):
         zwolniony = self.ui.admin_id_field.itemData(self.ui.admin_id_field.currentIndex(), Qt.UserRole)
         CurrentUser.delete_other_admin(zwolniony)
 
+    
 class LoginScreen(QDialog):
     successful_login = pyqtSignal()
     def __init__(self):

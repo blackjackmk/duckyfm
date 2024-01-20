@@ -636,7 +636,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>4</number>
+          <number>6</number>
          </property>
          <widget class="QWidget" name="home_page">
           <property name="styleSheet">
@@ -772,8 +772,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>81</width>
-                <height>38</height>
+                <width>804</width>
+                <height>441</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_25">
@@ -824,8 +824,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>63</width>
-                <height>38</height>
+                <width>786</width>
+                <height>417</height>
                </rect>
               </property>
               <layout class="QVBoxLayout" name="verticalLayout_37">
@@ -1126,8 +1126,8 @@
                <rect>
                 <x>0</x>
                 <y>0</y>
-                <width>788</width>
-                <height>301</height>
+                <width>174</width>
+                <height>197</height>
                </rect>
               </property>
               <attribute name="label">
@@ -1684,26 +1684,26 @@
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="album_autor">
+                  <widget class="QLabel" name="album_description">
                    <property name="font">
                     <font>
                      <pointsize>12</pointsize>
                     </font>
                    </property>
                    <property name="text">
-                    <string>Autor</string>
+                    <string>Description</string>
                    </property>
                   </widget>
                  </item>
                  <item>
-                  <widget class="QLabel" name="songs_count">
+                  <widget class="QLabel" name="album_genre">
                    <property name="font">
                     <font>
                      <pointsize>10</pointsize>
                     </font>
                    </property>
                    <property name="text">
-                    <string>Songs count</string>
+                    <string>Genre</string>
                    </property>
                   </widget>
                  </item>
