@@ -108,8 +108,9 @@ class User:
         self.email = result['email']
         self.adress = result['adress']
 
-    liked_albums = []
+    
     def get_liked_albums(self):
+        self.liked_albums = []
         query = "SELECT ulubione_plyty.id_album, plyty.title, plyty.description FROM ulubione_plyty INNER JOIN plyty ON ulubione_plyty.id_album = plyty.album_id WHERE ulubione_plyty.id_usera = ?"
         db.execute(query, (self.id,))
         rows = db.fetchall()
@@ -120,8 +121,8 @@ class User:
     def dislike_album(self, album_id):
         self.liked_albums.remove(album_id)
 
-    liked_songs = []
     def get_liked_songs(self):
+        self.liked_songs = []
         query = "SELECT ulubione_utwory.id_utworu, utwory.title, tworcy.pseudonim FROM ulubione_utwory INNER JOIN utwory ON ulubione_utwory.id_utworu = utwory.song_id INNER JOIN tworcy ON utwory.artist = tworcy.artist_id WHERE ulubione_utwory.id_usera = ?"
         db.execute(query, (self.id,))
         rows = db.fetchall()
