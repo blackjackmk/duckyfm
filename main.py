@@ -103,7 +103,7 @@ class MainWindow(QMainWindow):
 
             self.ui.new_album.clicked.connect(lambda _, id=row['album_id']: self.on_album_click(id))
 
-
+    @pyqtSlot()
     def on_album_click(self, id):
         self.ui.stackedWidget.setCurrentIndex(6)
         query = "SELECT plyty.title, plyty.description, genre.title AS genre FROM plyty INNER JOIN  genre ON plyty.genre = genre.id_genre WHERE album_id = ?"
@@ -223,7 +223,7 @@ class MainWindow(QMainWindow):
                 self.ui.gridLayout_2.addWidget(self.ui.library_card, r, c, 1, 1)
                 self.ui.library_card_title.setText("Album")
                 self.ui.library_card_autor.setText("Artist")
-
+    @pyqtSlot()
     def liked_fill(self):
         for i in reversed(range(self.ui.gridLayout_3.count())): 
             self.ui.gridLayout_3.itemAt(i).widget().setParent(None)
@@ -322,8 +322,8 @@ class MainWindow(QMainWindow):
             self.ui.verticalLayout_31.addWidget(self.ui.liked_card_autor)
             self.ui.gridLayout_3.addWidget(self.ui.liked_card, n//5, n%5, 1, 1)
             self.ui.liked_card_title.setText(lik2['title'])
-            #self.ui.liked_card.clicked.connect(lambda _, id=lik2['album_id']: self.on_album_click(id))
             n += 1
+            #self.ui.liked_card.mousePressEvent = lambda event, id=lik2['album_id']: self.on_album_click(id)
 
     def search_songs_fill(self, search_text):
         for i in reversed(range(self.ui.gridLayout_5.count())): 
@@ -411,7 +411,7 @@ class MainWindow(QMainWindow):
             self.ui.horizontalLayout_4.addWidget(self.ui.info)
             self.ui.albums_search_container.addWidget(self.ui.search_album_info)
             self.ui.search_album_title.setText(row['title'])
-            #self.ui.search_album_info.clicked.connect(lambda _, id=row['album_id']: self.on_album_click(id))
+            self.ui.search_album_info.mousePressEvent = lambda event, id=row['album_id']: self.on_album_click(id)
     
     def search_artist_fill(self, search_text):
         for i in reversed(range(self.ui.search_artist.count())): 
