@@ -113,6 +113,8 @@ class MainWindow(QMainWindow):
         self.ui.album_title.setText(result['title'])
         self.ui.album_description.setText(result['description'])
         self.ui.album_genre.setText(result['genre'])
+        self.ui.like_album.show()
+        self.ui.buy_album.show()
         #fill the table
         query2 = "SELECT utwory.title, genre.title AS genre, tworcy.pseudonim FROM utwory INNER JOIN genre ON utwory.genre = genre.id_genre INNER JOIN tworcy ON utwory.artist = tworcy.artist_id WHERE utwory.album = ?"
         db.execute(query2, (id,))
@@ -136,8 +138,35 @@ class MainWindow(QMainWindow):
         self.ui.album_title.setText(title)
         self.ui.album_description.setText(artist)
         self.ui.album_genre.setText(genre)
+        self.ui.like_album.show()
+        self.ui.buy_album.show()
         # Clear the table before populating it
         self.ui.album_songs_table.setRowCount(0)
+
+    def on_artist_click(self, id, pseudonim, description):
+        self.ui.stackedWidget.setCurrentIndex(6)
+        self.ui.album_title.setText(pseudonim)
+        self.ui.album_description.setText(description)
+        self.ui.album_genre.setText("")
+        self.ui.like_album.hide()
+        self.ui.buy_album.hide()
+        #fill the table
+        query2 = "SELECT utwory.title, genre.title AS genre, plyty.title AS album FROM utwory INNER JOIN genre ON utwory.genre = genre.id_genre INNER JOIN plyty ON utwory.album = plyty.album_id WHERE utwory.artist = ?"
+        db.execute(query2, (id,))
+        rows = db.fetchall()
+        # Clear the table before populating it
+        self.ui.album_songs_table.setRowCount(0)
+        # Set the number of rows and columns
+        self.ui.album_songs_table.setRowCount(len(rows))
+        self.ui.album_songs_table.setColumnCount(4)
+        for row, (title, genre, album) in enumerate(rows):
+            item_title = QtWidgets.QTableWidgetItem(title)
+            item_album = QtWidgets.QTableWidgetItem(album)
+            item_genre = QtWidgets.QTableWidgetItem(genre)
+            # Set items in the table
+            self.ui.album_songs_table.setItem(row, 0, item_title)
+            self.ui.album_songs_table.setItem(row, 1, item_album)
+            self.ui.album_songs_table.setItem(row, 2, item_genre)
 
     def discover_fill(self):
         for i in reversed(range(self.ui.gridLayout_4.count())): 
@@ -428,7 +457,7 @@ class MainWindow(QMainWindow):
         for i in reversed(range(self.ui.search_artist.count())): 
             self.ui.search_artist.itemAt(i).widget().setParent(None)
         search_text = "%"+search_text+"%"
-        query = "SELECT pseudonim FROM tworcy WHERE pseudonim LIKE ?"
+        query = "SELECT artist_id, pseudonim, description FROM tworcy WHERE pseudonim LIKE ?"
         db.execute(query, (search_text,))
         rows = db.fetchall()
         n = 0
@@ -444,6 +473,8 @@ class MainWindow(QMainWindow):
             self.ui.search_singer.setText(row['pseudonim'])
             self.ui.search_artist.addWidget(self.ui.search_singer, n//3, n%3, 1, 1)
             n += 1
+            self.ui.search_singer.clicked.connect(lambda _, id=row['artist_id'], pseudonim=row['pseudonim'], description=row['description']: self.on_artist_click(id, pseudonim, description))
+            
 
     def admin_combo_fill(self):
         #załadować id albumów do album_id_field, song_album_field
