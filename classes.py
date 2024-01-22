@@ -123,11 +123,11 @@ class User:
 
     def get_liked_songs(self):
         self.liked_songs = []
-        query = "SELECT ulubione_utwory.id_utworu, utwory.title, tworcy.pseudonim FROM ulubione_utwory INNER JOIN utwory ON ulubione_utwory.id_utworu = utwory.song_id INNER JOIN tworcy ON utwory.artist = tworcy.artist_id WHERE ulubione_utwory.id_usera = ?"
+        query = "SELECT ulubione_utwory.id_utworu, utwory.title, tworcy.pseudonim, genre.title AS genre FROM ulubione_utwory INNER JOIN utwory ON ulubione_utwory.id_utworu = utwory.song_id INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre WHERE ulubione_utwory.id_usera = ?"
         db.execute(query, (self.id,))
         rows = db.fetchall()
         for row in rows:
-            self.liked_songs.append({"song_id":row['id_utworu'], "title":row['title'], "artist":row['pseudonim']})
+            self.liked_songs.append({"song_id":row['id_utworu'], "title":row['title'], "artist":row['pseudonim'], "genre":row['genre']})
     def like_song(self, song_id):
         self.liked_songs.append(song_id)
     def dislike_album(self, song_id):

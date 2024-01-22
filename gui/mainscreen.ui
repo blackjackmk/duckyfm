@@ -636,7 +636,7 @@
           <string notr="true"/>
          </property>
          <property name="currentIndex">
-          <number>6</number>
+          <number>2</number>
          </property>
          <widget class="QWidget" name="home_page">
           <property name="styleSheet">

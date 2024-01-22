@@ -131,10 +131,18 @@ class MainWindow(QMainWindow):
             self.ui.album_songs_table.setItem(row, 1, item_artist)
             self.ui.album_songs_table.setItem(row, 2, item_genre)
 
+    def on_song_click(self, title, artist, genre):
+        self.ui.stackedWidget.setCurrentIndex(6)
+        self.ui.album_title.setText(title)
+        self.ui.album_description.setText(artist)
+        self.ui.album_genre.setText(genre)
+        # Clear the table before populating it
+        self.ui.album_songs_table.setRowCount(0)
+
     def discover_fill(self):
         for i in reversed(range(self.ui.gridLayout_4.count())): 
             self.ui.gridLayout_4.itemAt(i).widget().setParent(None)
-        db.execute("SELECT utwory.title, tworcy.pseudonim FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id ORDER BY song_id DESC")
+        db.execute("SELECT utwory.title, tworcy.pseudonim AS artist, genre.title AS genre FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre ORDER BY song_id DESC")
         rows = db.fetchall()
         n = 0
         for row in rows:
@@ -177,6 +185,7 @@ class MainWindow(QMainWindow):
             self.ui.artist.setText(row['artist'])
             self.ui.gridLayout_4.addWidget(self.ui.song_card, n//5, n%5, 1, 1)
             n += 1
+            self.ui.song_card.mousePressEvent = lambda event, title=row['title'], artist=row['artist'], genre=row['genre']: self.on_song_click(title, artist, genre)
         
     def library_fill(self):
         for i in reversed(range(self.ui.gridLayout_2.count())): 
@@ -229,55 +238,55 @@ class MainWindow(QMainWindow):
     def liked_fill(self):
         for i in reversed(range(self.ui.gridLayout_3.count())): 
             self.ui.gridLayout_3.itemAt(i).widget().setParent(None)
-        
         n = 0
-        # for lik in CurrentUser.liked_songs:
-        #     self.ui.liked_card = QtWidgets.QFrame(self.ui.liked_container)
-        #     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
-        #     sizePolicy.setHorizontalStretch(0)
-        #     sizePolicy.setVerticalStretch(0)
-        #     sizePolicy.setHeightForWidth(self.ui.liked_card.sizePolicy().hasHeightForWidth())
-        #     self.ui.liked_card.setSizePolicy(sizePolicy)
-        #     self.ui.liked_card.setFrameShape(QtWidgets.QFrame.StyledPanel)
-        #     self.ui.liked_card.setFrameShadow(QtWidgets.QFrame.Raised)
-        #     self.ui.liked_card.setObjectName("liked_card")
-        #     self.ui.verticalLayout_31 = QtWidgets.QVBoxLayout(self.ui.liked_card)
-        #     self.ui.verticalLayout_31.setObjectName("verticalLayout_31")
-        #     self.ui.liked_card_img = QtWidgets.QLabel(self.ui.liked_card)
-        #     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
-        #     sizePolicy.setHorizontalStretch(0)
-        #     sizePolicy.setVerticalStretch(0)
-        #     sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
-        #     self.ui.liked_card_img.setSizePolicy(sizePolicy)
-        #     self.ui.liked_card_img.setText("")
-        #     self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/heart.svg"))
-        #     self.ui.liked_card_img.setScaledContents(False)
-        #     self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
-        #     self.ui.liked_card_img.setObjectName("liked_card_img")
-        #     self.ui.verticalLayout_31.addWidget(self.ui.liked_card_img)
-        #     self.ui.liked_card_title = QtWidgets.QLabel(self.ui.liked_card)
-        #     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-        #     sizePolicy.setHorizontalStretch(0)
-        #     sizePolicy.setVerticalStretch(0)
-        #     sizePolicy.setHeightForWidth(self.ui.liked_card_title.sizePolicy().hasHeightForWidth())
-        #     self.ui.liked_card_title.setSizePolicy(sizePolicy)
-        #     font = QtGui.QFont()
-        #     font.setPointSize(12)
-        #     self.ui.liked_card_title.setFont(font)
-        #     self.ui.liked_card_title.setObjectName("liked_card_title")
-        #     self.ui.verticalLayout_31.addWidget(self.ui.liked_card_title)
-        #     self.ui.liked_card_autor = QtWidgets.QLabel(self.ui.liked_card)
-        #     sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-        #     sizePolicy.setHorizontalStretch(0)
-        #     sizePolicy.setVerticalStretch(0)
-        #     sizePolicy.setHeightForWidth(self.ui.liked_card_autor.sizePolicy().hasHeightForWidth())
-        #     self.ui.liked_card_autor.setSizePolicy(sizePolicy)
-        #     self.ui.liked_card_autor.setObjectName("liked_card_autor")
-        #     self.ui.verticalLayout_31.addWidget(self.ui.liked_card_autor)
-        #     self.ui.gridLayout_3.addWidget(self.ui.liked_card, n//5, n%5, 1, 1)
-        #     self.ui.liked_card_title.setText(lik['title'])
-        #     self.ui.liked_card_autor.setText(lik['artist'])
-        #     n += 1
+        for lik in CurrentUser.liked_songs:
+            self.ui.liked_card = QtWidgets.QFrame(self.ui.liked_container)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.ui.liked_card.sizePolicy().hasHeightForWidth())
+            self.ui.liked_card.setSizePolicy(sizePolicy)
+            self.ui.liked_card.setFrameShape(QtWidgets.QFrame.StyledPanel)
+            self.ui.liked_card.setFrameShadow(QtWidgets.QFrame.Raised)
+            self.ui.liked_card.setObjectName("liked_card")
+            self.ui.verticalLayout_31 = QtWidgets.QVBoxLayout(self.ui.liked_card)
+            self.ui.verticalLayout_31.setObjectName("verticalLayout_31")
+            self.ui.liked_card_img = QtWidgets.QLabel(self.ui.liked_card)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Expanding)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
+            self.ui.liked_card_img.setSizePolicy(sizePolicy)
+            self.ui.liked_card_img.setText("")
+            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/heart.svg"))
+            self.ui.liked_card_img.setScaledContents(False)
+            self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
+            self.ui.liked_card_img.setObjectName("liked_card_img")
+            self.ui.verticalLayout_31.addWidget(self.ui.liked_card_img)
+            self.ui.liked_card_title = QtWidgets.QLabel(self.ui.liked_card)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.ui.liked_card_title.sizePolicy().hasHeightForWidth())
+            self.ui.liked_card_title.setSizePolicy(sizePolicy)
+            font = QtGui.QFont()
+            font.setPointSize(12)
+            self.ui.liked_card_title.setFont(font)
+            self.ui.liked_card_title.setObjectName("liked_card_title")
+            self.ui.verticalLayout_31.addWidget(self.ui.liked_card_title)
+            self.ui.liked_card_autor = QtWidgets.QLabel(self.ui.liked_card)
+            sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
+            sizePolicy.setHorizontalStretch(0)
+            sizePolicy.setVerticalStretch(0)
+            sizePolicy.setHeightForWidth(self.ui.liked_card_autor.sizePolicy().hasHeightForWidth())
+            self.ui.liked_card_autor.setSizePolicy(sizePolicy)
+            self.ui.liked_card_autor.setObjectName("liked_card_autor")
+            self.ui.verticalLayout_31.addWidget(self.ui.liked_card_autor)
+            self.ui.gridLayout_3.addWidget(self.ui.liked_card, n//5, n%5, 1, 1)
+            self.ui.liked_card_title.setText(lik['title'])
+            self.ui.liked_card_autor.setText(lik['artist'])
+            n += 1
+            self.ui.liked_card.mousePressEvent = lambda event, title=lik['title'], artist=lik['artist'], genre=lik['genre']: self.on_song_click(title, artist, genre)
         for lik2 in CurrentUser.liked_albums:
             self.ui.liked_card = QtWidgets.QFrame(self.ui.liked_container)
             sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Minimum)
@@ -330,7 +339,7 @@ class MainWindow(QMainWindow):
         for i in reversed(range(self.ui.gridLayout_5.count())): 
             self.ui.gridLayout_5.itemAt(i).widget().setParent(None)
         search_text = "%"+search_text+"%"
-        query = "SELECT utwory.title, tworcy.pseudonim FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id WHERE utwory.title LIKE ? ORDER BY song_id DESC"
+        query = "SELECT utwory.title, tworcy.pseudonim, genre.title AS genre FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre WHERE utwory.title LIKE ? ORDER BY song_id DESC"
         db.execute(query, (search_text,))
         rows = db.fetchall()
         n = 0
@@ -374,6 +383,7 @@ class MainWindow(QMainWindow):
             self.ui.artist.setText(row['pseudonim'])
             self.ui.gridLayout_5.addWidget(self.ui.song_card_find, n//5, n%5, 1, 1)
             n += 1
+            self.ui.song_card_find.mousePressEvent = lambda event, title=row['title'], artist=row['pseudonim'], genre=row['genre']: self.on_song_click(title, artist, genre)
     
     def search_albums_fill(self, search_text):
         for i in reversed(range(self.ui.albums_search_container.count())): 
