@@ -306,7 +306,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
             self.ui.liked_card_img.setSizePolicy(sizePolicy)
             self.ui.liked_card_img.setText("")
-            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/heart.svg"))
+            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-unchecked.svg"))
             self.ui.liked_card_img.setScaledContents(False)
             self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.liked_card_img.setObjectName("liked_card_img")
@@ -565,6 +565,7 @@ class MainWindow(QMainWindow):
         CurrentUser.email = self.ui.email.text()
         CurrentUser.adress = self.ui.addres.toPlainText()
         CurrentUser.update_user_info()
+    ###ADMIN###
     @pyqtSlot()
     def on_album_add_btn_clicked(self):
         title = self.ui.title_field.text()
