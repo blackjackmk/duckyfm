@@ -4,6 +4,8 @@ import re
 from default_base import db, conn
 from classes import User, Admin
 
+global CurrentUser
+CurrentUser = None
 #logowanie
 def logowanie(login, password):
     query = "SELECT username, user_id, is_admin, haslo FROM users WHERE username = ?"

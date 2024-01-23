@@ -94,20 +94,6 @@ class User:
         self.username = username
         self.is_admin = is_admin
         self.id = id
-        self.get_personal_info()
-        self.get_liked_songs()
-        self.get_liked_albums()
-    
-
-    def get_personal_info(self):
-        query = "SELECT name, surname, email, adress FROM users WHERE user_id = ?"
-        db.execute(query, (self.id,))
-        result = db.fetchone()
-        self.name = result['name']
-        self.surname = result['surname']
-        self.email = result['email']
-        self.adress = result['adress']
-
     
     def get_liked_albums(self):
         self.liked_albums = []
@@ -165,7 +151,7 @@ class User:
 class Admin(User):
     def __init__(self, username, is_admin, id):
         super().__init__(username, is_admin, id)
-
+        
     def awans(self, new_admin_id):
         query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
         db.execute(query, (new_admin_id,))
