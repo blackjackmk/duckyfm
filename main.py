@@ -245,8 +245,7 @@ class MainWindow(QMainWindow):
             self.ui.gridLayout_4.addWidget(self.ui.song_card, n//5, n%5, 1, 1)
             self.ui.song_card.mousePressEvent = lambda event, id=row['song_id'],title=row['title'],artist=row['artist'],genre=row['genre']: self.on_song_click(id,title,artist,genre)
             n += 1
-            
-        
+                   
     def library_fill(self):
         for i in reversed(range(self.ui.gridLayout_2.count())): 
             self.ui.gridLayout_2.itemAt(i).widget().setParent(None)

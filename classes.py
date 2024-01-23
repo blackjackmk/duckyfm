@@ -122,12 +122,16 @@ class User:
             pass
         else:
             self.liked_albums.append(liked_album)
-        self.update_favourite()
+            query = "INSERT INTO ulubione_plyty (id_usera, id_album) VALUES (?, ?)"
+            db.execute(query, (self.id, liked_album['album_id']))
+            db.commit()
     def dislike_album(self, album_id):
         index_to_remove = next((index for index, album in enumerate(self.liked_albums) if album["album_id"] == album_id), None)
         if index_to_remove is not None:
             del self.liked_albums[index_to_remove]
-        self.update_favourite()
+            query = "DELETE FROM ulubione_plyty WHERE id_usera = ? AND id_album = ?"
+            db.execute(query, (self.id, album_id))
+            db.commit()
 
     def get_liked_songs(self):
         self.liked_songs = []
@@ -142,33 +146,16 @@ class User:
             pass
         else:
             self.liked_songs.append(liked_song)
-        self.update_favourite()
+            query = "INSERT INTO ulubione_utwory (id_usera, id_utworu) VALUES (?, ?)"
+            db.execute(query, (self.id, liked_song['song_id']))
+            db.commit()
     def dislike_song(self, song_id):
         index_to_remove = next((index for index, song in enumerate(self.liked_songs) if song["song_id"] == song_id), None)
         if index_to_remove is not None:
             del self.liked_songs[index_to_remove]
-        self.update_favourite()
-
-    def update_favourite(self):#w którymś momencie potrzebujemy wprowadzić te zmiany do bazy
-        # Remove all of the existing liked songs for the user
-        query = "DELETE FROM ulubione_utwory WHERE id_usera = ?"
-        db.execute(query, (self.id,))
-
-        # Remove all of the existing liked albums for the user
-        query = "DELETE FROM ulubione_plyty WHERE id_usera = ?"
-        db.execute(query, (self.id,))
-
-        # Insert the new list of liked songs into the database
-        for song in self.liked_songs:
-            query = "INSERT INTO ulubione_utwory (id_usera, id_utworu) VALUES (?, ?)"
-            db.execute(query, (self.id, song['song_id']))
-
-        # Insert the new list of liked albums into the database
-        for album in self.liked_albums:
-            query = "INSERT INTO ulubione_plyty (id_usera, id_album) VALUES (?, ?)"
-            db.execute(query, (self.id, album['album_id']))
-
-        db.commit()
+            query = "DELETE FROM ulubione_utwory WHERE id_usera = ? AND id_utworu = ?"
+            db.execute(query, (self.id, song_id))
+            db.commit()
     
     def update_user_info(self):
         query = "UPDATE users SET username = ?, name = ?, surname = ?, email = ?, adress = ? WHERE user_id = ?"
