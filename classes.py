@@ -117,9 +117,14 @@ class User:
         for row in rows:
             self.liked_albums.append({"album_id":row['id_album'], "title":row['title'], "description":row['description']})
     def like_album(self, album_id):
-        self.liked_albums.append(album_id)
+        query = "SELECT title, description FROM plyty WHERE album_id = ?"
+        db.execute(query, (album_id,))
+        row = db.fetchone()
+        self.liked_albums.append({"album_id":album_id, "title":row['title'], "description":row['description']})
     def dislike_album(self, album_id):
-        self.liked_albums.remove(album_id)
+        index_to_remove = next((index for index, album in enumerate(self.liked_albums) if album["album_id"] == album_id), None)
+        if index_to_remove is not None:
+            del self.liked_albums[index_to_remove]
 
     def get_liked_songs(self):
         self.liked_songs = []
