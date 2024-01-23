@@ -93,7 +93,7 @@ class MainWindow(QMainWindow):
             self.ui.icon8 = QtGui.QIcon()
             self.ui.icon8.addPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.new_album.setFont(font)
-            self.ui.new_album.setStyleSheet("")
+            self.ui.new_album.setStyleSheet("color: #000000;")
             self.ui.new_album.setIcon(self.ui.icon8)
             self.ui.new_album.setIconSize(QtCore.QSize(30, 30))
             self.ui.new_album.setObjectName("new_album")

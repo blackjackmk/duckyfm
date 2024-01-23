@@ -52,3 +52,22 @@
     text-align: left;
     color: #ffffff;
 }
+#home_label1,
+#home_label2,
+#library_label,
+#liked_label,
+#addmin_label,
+#general_setting_label,
+#profile_setting_label,
+#theme,
+#language,
+#login_label,
+#name_label,
+#surname_label,
+#addres_label,
+#email_label,
+#album_title,
+#album_description,
+#album_genre {
+    color: rgb(255, 255, 255);
+}
