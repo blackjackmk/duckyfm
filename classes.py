@@ -1,6 +1,5 @@
 import datetime
 from default_base import db, conn
-global CurrentUser
 
 class Artist:
     def __init__(self, pseudonim, opis, id=None): # is always executed when the class is being initiated
@@ -13,7 +12,6 @@ class Artist:
         query = "INSERT INTO tworcy (pseudonim, description) VALUES (?, ?)"
         db.execute(query, (self.pseudonim, self.opis))
         conn.commit()
-        self.id = db.lastrowid
 
     #edytowanie
     def update(self):
@@ -22,7 +20,7 @@ class Artist:
         conn.commit()
 
 class Songs:
-    def __init__(self, title=None, genre=None, artist=None, album=None, status="Published", id=None): # is always executed when the class is being initiated
+    def __init__(self, title, genre, artist, album, status, id=None): # is always executed when the class is being initiated
         self.title = title
         self.genre = genre
         self.artist = artist
@@ -37,7 +35,8 @@ class Songs:
         createtime = teraz.strftime("%Y-%m-%d %H:%M:%S")
         db.execute(query, (self.title, self.genre, self.artist, self.album, createtime))
         conn.commit()
-        self.id = db.lastrowid
+        db.execute("SELECT IDENT_CURRENT('utwory')")
+        self.id = db.fetchone()[0]
         query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
         db.execute(query, (self.artist, self.id))
         conn.commit()
@@ -46,7 +45,7 @@ class Songs:
     def update(self):
         query = "UPDATE utwory SET title = ?, genre = ?, artist = ?, album = ?, status = ? WHERE song_id = ?"
         db.execute(query, (self.title, self.genre, self.artist, self.album, self.status, self.id))
-        query2 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ?, id_utworu = ?)"
+        query2 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ? WHERE id_utworu = ?"
         db.execute(query2, (self.artist, self.id))
         conn.commit()
 
@@ -59,10 +58,9 @@ class Plyty:
 
     #tworzenie
     def create(self):
-        query = "INSERT INTO plyty (title, description, genre, artist) VALUES (?, ?, ?, ?)"
+        query = "INSERT INTO plyty (title, description, genre) VALUES (?, ?, ?)"
         db.execute(query, (self.title, self.description, self.genre))
         conn.commit()
-        self.id = db.lastrowid
 
     #edytowanie
     def update(self):
@@ -70,73 +68,90 @@ class Plyty:
         db.execute(query, (self.title, self.description, self.genre, self.id))
         conn.commit()
 
+#tworzenie relacji twórca-utwór (gdy są więcej niż jeden)
+def song_singer_connect(singer_id,song_id):
+    query = "INSERT INTO wykonawcy_utwory (id_wykonawcy, id_utworu) VALUES (?, ?)"
+    db.execute(query, (singer_id, song_id))
+    conn.commit()
+
+#przypisanie utworów do płyt
+def songs_to_album(album_id, singer_id):
+    #jeżeli twórca jest podany, to wszystkie piosenki w albumie będą należały do niego
+    query = "SELECT song_id FROM utwory WHERE album = ?"
+    db.execute(query, (album_id,))
+    songs_in_album = db.fetchall()
+    #dla każdego utworu zmienić pole 'artist' na singer_id
+    for song in songs_in_album:
+        query2 = "UPDATE utwory SET artist = ? WHERE song_id = ?"
+        db.execute(query2, (singer_id, song['song_id']))
+        conn.commit()
+        query3 = "UPDATE wykonawcy_utwory SET id_wykonawcy = ? WHERE id_utworu = ?"
+        db.execute(query3, (singer_id, song['song_id']))
+        conn.commit()
+
 class User:
     def __init__(self, username, is_admin, id):
         self.username = username
-        self.is_admin = False
+        self.is_admin = is_admin
         self.id = id
-        #przy tworzeniu potrzebujemy pobrać z bazy ulubione utwory i albumy
-        self.get_liked_albums()
-        self.get_liked_songs()
     
-    liked_albums = ()
     def get_liked_albums(self):
-        query = "SELECT id_album FROM ulubione_plyty WHERE id_usera = ?"
+        self.liked_albums = []
+        query = "SELECT ulubione_plyty.id_album, plyty.title, plyty.description FROM ulubione_plyty INNER JOIN plyty ON ulubione_plyty.id_album = plyty.album_id WHERE ulubione_plyty.id_usera = ?"
         db.execute(query, (self.id,))
         rows = db.fetchall()
         for row in rows:
-            self.liked_albums.append(row.id_album)
-    def like_album(self, album_id):
-        self.liked_albums.append(album_id)
-    def dislike_album(self, album_id):
-        self.liked_albums.remove(album_id)
-
-    liked_songs = ()
-    def get_liked_songs(self):
-        query = "SELECT id_utworu FROM ulubione_utwory WHERE id_usera = ?"
-        db.execute(query, (self.id,))
-        rows = db.fetchall()
-        for row in rows:
-            self.liked_songs.append(row.id_album)
-    def like_song(self, song_id):
-        self.liked_songs.append(song_id)
-    def dislike_album(self, song_id):
-        self.liked_songs.remove(song_id)
-
-    def update_favourite(self):
-        # Remove all of the existing liked songs for the user
-        query = "DELETE FROM ulubione_utwory WHERE id_usera = ?"
-        db.execute(query, (self.id,))
-
-        # Remove all of the existing liked albums for the user
-        query = "DELETE FROM ulubione_plyty WHERE id_usera = ?"
-        db.execute(query, (self.id,))
-
-        # Insert the new list of liked songs into the database
-        for song_id in self.liked_songs:
-            query = "INSERT INTO ulubione_utwory (id_usera, id_utworu) VALUES (?, ?)"
-            db.execute(query, (self.id, song_id))
-
-        # Insert the new list of liked albums into the database
-        for album_id in self.liked_albums:
+            self.liked_albums.append({"album_id":row['id_album'], "title":row['title'], "description":row['description']})
+    def like_album(self, album_id, album_title, album_description):
+        liked_album = {"album_id":album_id, "title":album_title, "description":album_description}
+        if liked_album in self.liked_albums:
+            pass
+        else:
+            self.liked_albums.append(liked_album)
             query = "INSERT INTO ulubione_plyty (id_usera, id_album) VALUES (?, ?)"
+            db.execute(query, (self.id, liked_album['album_id']))
+            db.commit()
+    def dislike_album(self, album_id):
+        index_to_remove = next((index for index, album in enumerate(self.liked_albums) if album["album_id"] == album_id), None)
+        if index_to_remove is not None:
+            del self.liked_albums[index_to_remove]
+            query = "DELETE FROM ulubione_plyty WHERE id_usera = ? AND id_album = ?"
             db.execute(query, (self.id, album_id))
+            db.commit()
 
-        db.commit()
-    #w którymś momencie potrzebujemy wprowadzić te zmiany do bazy
-        
-
-def only_admin(func):
-    def wrapper(*args, **kwargs):
-        if not isinstance(CurrentUser, Admin):#gdy nie jest objektem klasy
-            raise PermissionError("Brak dostępu. Zaloguj się jako admin.")
-        return func(*args, **kwargs)
-    return wrapper
+    def get_liked_songs(self):
+        self.liked_songs = []
+        query = "SELECT ulubione_utwory.id_utworu, utwory.title, tworcy.pseudonim, genre.title AS genre FROM ulubione_utwory INNER JOIN utwory ON ulubione_utwory.id_utworu = utwory.song_id INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre WHERE ulubione_utwory.id_usera = ?"
+        db.execute(query, (self.id,))
+        rows = db.fetchall()
+        for row in rows:
+            self.liked_songs.append({"song_id":row['id_utworu'], "title":row['title'], "artist":row['pseudonim'], "genre":row['genre']})      
+    def like_song(self, song_id, song_title, song_artist, song_genre):
+        liked_song = {"song_id":song_id, "title":song_title, "artist":song_artist, "genre":song_genre}
+        if liked_song in self.liked_songs:
+            pass
+        else:
+            self.liked_songs.append(liked_song)
+            query = "INSERT INTO ulubione_utwory (id_usera, id_utworu) VALUES (?, ?)"
+            db.execute(query, (self.id, liked_song['song_id']))
+            db.commit()
+    def dislike_song(self, song_id):
+        index_to_remove = next((index for index, song in enumerate(self.liked_songs) if song["song_id"] == song_id), None)
+        if index_to_remove is not None:
+            del self.liked_songs[index_to_remove]
+            query = "DELETE FROM ulubione_utwory WHERE id_usera = ? AND id_utworu = ?"
+            db.execute(query, (self.id, song_id))
+            db.commit()
+    
+    def update_user_info(self):
+        query = "UPDATE users SET username = ?, name = ?, surname = ?, email = ?, adress = ? WHERE user_id = ?"
+        db.execute(query, (self.username, self.name, self.surname, self.email, self.adress, self.id))
+        conn.commit()
 
 class Admin(User):
     def __init__(self, username, is_admin, id):
-        super().__init__(username, True, id)
-
+        super().__init__(username, is_admin, id)
+        
     def awans(self, new_admin_id):
         query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
         db.execute(query, (new_admin_id,))
@@ -154,22 +169,12 @@ class Admin(User):
             db.execute(query, (admin_to_fire,))
         conn.commit()
         
-    def resignation(self):
+    def resignation(self, zastepca):
         #moze sam zrezygnowac, ale uwaga: musi wskazac kogos innego z listy
-        zastepca = input("Podaj id swojego zastępcy: ")
-        #check is user exist
-        db.execute('SELECT COUNT(*) AS user_count FROM users WHERE user_id = ?', (zastepca,))
-        result = db.fetchone()
-
-        if result[0] > 0:
-            #exist
-            query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
-            db.execute(query, (zastepca,))
-            query = "UPDATE users SET is_admin = 0 WHERE user_id = ?"
-            db.execute(query, (self.id,))
-        else:
-            #doesn't exist
-            print("Taki id nie istnieje")
+        query = "UPDATE users SET is_admin = 1 WHERE user_id = ?"
+        db.execute(query, (zastepca,))
+        query = "UPDATE users SET is_admin = 0 WHERE user_id = ?"
+        db.execute(query, (self.id,))
         conn.commit()
 
 

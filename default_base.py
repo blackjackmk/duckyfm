@@ -1,7 +1,7 @@
 artist_table = '''CREATE TABLE tworcy ( 
     artist_id INT IDENTITY PRIMARY KEY, 
     pseudonim NVARCHAR (25), 
-    description NVARCHAR (50) )'''
+    description NVARCHAR (100) )'''
 utwory_table = '''CREATE TABLE utwory (
     song_id    INT IDENTITY PRIMARY KEY,
     title      NVARCHAR (30),
@@ -24,12 +24,12 @@ users_table = '''CREATE TABLE users (
     name NVARCHAR (60), 
     surname NVARCHAR (80), 
     email NVARCHAR (40),
-    adress NVARCHAR, 
+    adress NVARCHAR (250), 
     is_admin INT DEFAULT (0), 
     haslo NVARCHAR(500) NOT NULL);'''
 genre = '''CREATE TABLE genre (
     id_genre INT IDENTITY PRIMARY KEY,
-    title    NVARCHAR    NOT NULL
+    title    NVARCHAR(10)    NOT NULL
                      UNIQUE
 );'''
 wykonawcy_utwory = '''CREATE TABLE wykonawcy_utwory (

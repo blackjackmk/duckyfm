@@ -1,0 +1,52 @@
+#MainWindow{
+    background-color: #fff;
+}
+
+#top_menu{
+    background-color: #f9fafd;
+}
+
+#top_menu QPushButton{
+    border: none;
+}
+
+#sidebar_icon{
+    background-color: #313a46;
+}
+
+#sidebar_icon QPushButton{
+    border: none;
+    padding: 8px 8px 8px 15px;
+}
+
+#sidebar_icon QPushButton:hover{
+    background-color: rgba(86, 101, 115, 0.5);
+}
+
+#sidebar_icon QPushButton:checked{
+    background-color: rgba(86, 101, 115, 0.5);
+}
+
+#sidebar_full{
+    background-color: #313a46;
+}
+
+#sidebar_full QPushButton{
+    border: none;
+    border-radius: 3px;
+    text-align: left;
+    padding: 8px 0 8px 15px;
+    color: #788596;
+}
+
+#sidebar_full QPushButton:hover{
+    background-color: rgba(86, 101, 115, 0.5);
+}
+
+#sidebar_full QPushButton:checked{
+    color: #fff;
+}
+
+#home_page QPushButton{
+	text-align:left;
+}

@@ -1,0 +1,73 @@
+#MainWindow {
+    background-color: #1a1a1a;
+    color: #ffffff;
+}
+
+#top_menu {
+    background-color: #2c3e50;
+}
+
+#top_menu QPushButton {
+    border: none;
+}
+
+#sidebar_icon {
+    background-color: #283240;
+}
+
+#sidebar_icon QPushButton {
+    border: none;
+    padding: 8px 8px 8px 15px;
+}
+
+#sidebar_icon QPushButton:hover {
+    background-color: rgba(86, 101, 115, 0.5);
+}
+
+#sidebar_icon QPushButton:checked {
+    background-color: rgba(86, 101, 115, 0.5);
+}
+
+#sidebar_full {
+    background-color: #283240;
+}
+
+#sidebar_full QPushButton {
+    border: none;
+    border-radius: 3px;
+    text-align: left;
+    padding: 8px 0 8px 15px;
+    color: #ffffff;
+}
+
+#sidebar_full QPushButton:hover {
+    background-color: rgba(86, 101, 115, 0.5);
+}
+
+#sidebar_full QPushButton:checked {
+    color: #ffffff;
+}
+
+#home_page QPushButton {
+    text-align: left;
+    color: #ffffff;
+}
+#home_label1,
+#home_label2,
+#library_label,
+#liked_label,
+#addmin_label,
+#general_setting_label,
+#profile_setting_label,
+#theme,
+#language,
+#login_label,
+#name_label,
+#surname_label,
+#addres_label,
+#email_label,
+#album_title,
+#album_description,
+#album_genre {
+    color: rgb(255, 255, 255);
+}
