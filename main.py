@@ -112,6 +112,7 @@ class MainWindow(QMainWindow):
         self.ui.album_title.setText(result['title'])
         self.ui.album_description.setText(result['description'])
         self.ui.album_genre.setText(result['genre'])
+        self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"))
         #if is in liked we need to change it to dislike
         liked_album = {"album_id":id, "title":result['title'], "description":result['description']}
         if liked_album in CurrentUser.liked_albums:
@@ -151,6 +152,7 @@ class MainWindow(QMainWindow):
         self.ui.album_title.setText(title)
         self.ui.album_description.setText(artist)
         self.ui.album_genre.setText(genre)
+        self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
         #if is in liked we need to change it to dislike
         liked_song = {"song_id":song_id, "title":title, "artist":artist, "genre":genre}
         if liked_song in CurrentUser.liked_songs:
@@ -174,6 +176,7 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(5)
         self.ui.album_title.setText(pseudonim)
         self.ui.album_description.setText(description)
+        self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/user.svg"))
         self.ui.album_genre.setText("")
         self.ui.like_album.hide()
         #fill the table
@@ -214,7 +217,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.img.sizePolicy().hasHeightForWidth())
             self.ui.img.setSizePolicy(sizePolicy)
             self.ui.img.setText("")
-            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/play3.svg"))
+            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
             self.ui.img.setScaledContents(False)
             self.ui.img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.img.setObjectName("img")
@@ -265,7 +268,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
             self.ui.liked_card_img.setSizePolicy(sizePolicy)
             self.ui.liked_card_img.setText("")
-            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/heart.svg"))
+            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
             self.ui.liked_card_img.setScaledContents(False)
             self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.liked_card_img.setObjectName("liked_card_img")
@@ -313,7 +316,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
             self.ui.liked_card_img.setSizePolicy(sizePolicy)
             self.ui.liked_card_img.setText("")
-            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-unchecked.svg"))
+            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"))
             self.ui.liked_card_img.setScaledContents(False)
             self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.liked_card_img.setObjectName("liked_card_img")
@@ -364,7 +367,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.img.sizePolicy().hasHeightForWidth())
             self.ui.img.setSizePolicy(sizePolicy)
             self.ui.img.setText("")
-            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/play3.svg"))
+            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
             self.ui.img.setScaledContents(False)
             self.ui.img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.img.setObjectName("img")
@@ -411,7 +414,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.album_logo.sizePolicy().hasHeightForWidth())
             self.ui.album_logo.setSizePolicy(sizePolicy)
             self.ui.album_logo.setText("")
-            self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
+            self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"))
             self.ui.album_logo.setScaledContents(False)
             self.ui.album_logo.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.album_logo.setObjectName("album_logo")
@@ -443,9 +446,11 @@ class MainWindow(QMainWindow):
             self.ui.search_singer = QtWidgets.QPushButton(self.ui.scrollAreaWidgetContents_4)
             font = QtGui.QFont()
             font.setPointSize(14)
+            self.ui.icon2 = QtGui.QIcon()
+            self.ui.icon2.addPixmap(QtGui.QPixmap(":/icon/icomoon/user.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.search_singer.setFont(font)
             self.ui.search_singer.setStyleSheet("")
-            self.ui.search_singer.setIcon(self.ui.icon8)
+            self.ui.search_singer.setIcon(self.ui.icon2)
             self.ui.search_singer.setIconSize(QtCore.QSize(30, 30))
             self.ui.search_singer.setObjectName("search_singer")
             self.ui.search_singer.setText(row['pseudonim'])
@@ -569,6 +574,7 @@ class MainWindow(QMainWindow):
         CurrentUser.email = self.ui.email.text()
         CurrentUser.adress = self.ui.addres.toPlainText()
         CurrentUser.update_user_info()
+    
     ###ADMIN###
     @pyqtSlot()
     def on_album_add_btn_clicked(self):

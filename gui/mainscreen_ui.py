@@ -14,8 +14,9 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1920, 1080)
-        icon = QtGui.QIcon(".\\gui\\logo.png")
+        MainWindow.resize(1066, 574)
+        icon = QtGui.QIcon()
+        icon.addPixmap(QtGui.QPixmap(".\\gui\\logo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         MainWindow.setWindowIcon(icon)
         MainWindow.setStyleSheet("")
         self.centralwidget = QtWidgets.QWidget(MainWindow)
@@ -614,6 +615,9 @@ class Ui_MainWindow(object):
         self.verticalLayout_8.addWidget(self.album_genre)
         self.horizontalLayout_3.addWidget(self.info)
         self.like_album = QtWidgets.QPushButton(self.album_info)
+        font = QtGui.QFont()
+        font.setPointSize(15)
+        self.like_album.setFont(font)
         icon3 = QtGui.QIcon()
         icon3.addPixmap(QtGui.QPixmap(":/icon/icomoon/heart.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.like_album.setIcon(icon3)
@@ -827,7 +831,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(5)
         self.toolBox.setCurrentIndex(1)
         self.collapse.toggled['bool'].connect(self.sidebar_full.setVisible) # type: ignore
         self.collapse.toggled['bool'].connect(self.sidebar_icon.setHidden) # type: ignore
