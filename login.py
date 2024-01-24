@@ -32,14 +32,14 @@ def rejestracja(username, name, surname, email, haslo, haslo2):
     if (haslo != haslo2):
         raise ValueError("Hasła nie zgadzają się")
     #pierwszy zarejestrowany uzytkownik staje sie administratorem systemu
-    db.execute("SELECT * FROM users")
+    db.execute("SELECT username FROM users")
     results = db.fetchone()
     if results is None:
         is_admin = 1
     else:
         is_admin = 0
     #sprawdzamy czu user o takim username istnieje
-    db.execute("SELECT * FROM users WHERE username = ?", (username,))
+    db.execute("SELECT username FROM users WHERE username = ?", (username,))
     results = db.fetchone()
     if results is None:
         pass

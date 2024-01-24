@@ -94,6 +94,19 @@ class User:
         self.username = username
         self.is_admin = is_admin
         self.id = id
+        self.get_liked_albums()
+        self.get_liked_songs()
+        self.get_personal_info()
+
+
+    def get_personal_info(self):
+        query = "SELECT name, surname, email, adress FROM users WHERE user_id = ?"
+        db.execute(query, (self.id,))
+        result = db.fetchone()
+        self.name = result['name']
+        self.surname = result['surname']
+        self.email = result['email']
+        self.adress = result['adress']
     
     def get_liked_albums(self):
         self.liked_albums = []
