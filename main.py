@@ -200,7 +200,7 @@ class MainWindow(QMainWindow):
     def discover_fill(self):
         for i in reversed(range(self.ui.gridLayout_4.count())): 
             self.ui.gridLayout_4.itemAt(i).widget().setParent(None)
-        db.execute("SELECT utwory.song_id, utwory.title, tworcy.pseudonim AS artist, genre.title AS genre FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre ORDER BY song_id DESC")
+        db.execute("SELECT TOP 25 utwory.song_id, utwory.title, tworcy.pseudonim AS artist, genre.title AS genre FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre ORDER BY song_id DESC")
         rows = db.fetchall()
         n = 0
         for row in rows:

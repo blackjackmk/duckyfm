@@ -1,17 +1,17 @@
 artist_table = '''CREATE TABLE tworcy ( 
     artist_id INT IDENTITY PRIMARY KEY, 
-    pseudonim NVARCHAR (25), 
-    description NVARCHAR (100) )'''
+    pseudonim NVARCHAR (50), 
+    description NVARCHAR (255) )'''
 utwory_table = '''CREATE TABLE utwory (
     song_id    INT IDENTITY PRIMARY KEY,
     title      NVARCHAR (30),
     genre      INT   REFERENCES genre (id_genre) ON UPDATE CASCADE,
-    artist     INT   REFERENCES tworcy (artist_id) ON DELETE CASCADE
-                                                    ON UPDATE CASCADE,
-    album      INT   REFERENCES plyty (album_id) ON DELETE NO ACTION,
-    status     NVARCHAR(12)      DEFAULT 'Published',
+    artist     INT   REFERENCES tworcy (artist_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    album      INT   REFERENCES plyty (album_id) ON DELETE NO ACTION ON UPDATE NO ACTION,
+    status     NVARCHAR(12) DEFAULT 'Published',
     created_at DATE
 )'''
+
 plyty_table = '''CREATE TABLE plyty (
     album_id    INT IDENTITY PRIMARY KEY,
     title       NVARCHAR (30),
