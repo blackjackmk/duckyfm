@@ -49,13 +49,16 @@ ulubione_plyty = '''CREATE TABLE ulubione_plyty (
 );'''
 
 import pypyodbc as odbc
-from credential import db_login, db_pass, db_name, server_name
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 conn = odbc.connect(
-  SERVER = server_name,
-  DATABASE = db_name,
-  UID = db_login,
-  PWD = db_pass,
+  SERVER = os.getenv('DB_SERVER'),
+  DATABASE = os.getenv('DB_NAME'),
+  UID = os.getenv('DB_LOGIN'),
+  PWD = os.getenv('DB_PASS'),
   DRIVER='{ODBC Driver 18 for SQL Server}',
   Trusted_Connection="no"
 )

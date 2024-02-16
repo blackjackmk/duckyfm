@@ -180,7 +180,7 @@ class MainWindow(QMainWindow):
         self.ui.album_genre.setText("")
         self.ui.like_album.hide()
         #fill the table
-        query2 = "SELECT utwory.title, genre.title AS genre, plyty.title AS album FROM utwory INNER JOIN genre ON utwory.genre = genre.id_genre INNER JOIN plyty ON utwory.album = plyty.album_id WHERE utwory.artist = ?"
+        query2 = "SELECT utwory.title, genre.title AS genre, plyty.title AS album FROM utwory LEFT JOIN genre ON utwory.genre = genre.id_genre LEFT JOIN plyty ON utwory.album = plyty.album_id WHERE utwory.artist = ?"
         db.execute(query2, (id,))
         rows = db.fetchall()
         # Clear the table before populating it
