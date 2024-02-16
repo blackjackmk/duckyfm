@@ -63,7 +63,7 @@ class MainWindow(QMainWindow):
                 self.admin_loaded = True
     
     #może zrobić to enum'em
-    #[home, library, liked, admin, search, user]
+    #[home, liked, admin, search, user, certain]
 
     def on_stackedWidget_currentChanged(self, index): #przy zmianie okna
         btn_list = self.ui.sidebar_icon.findChildren(QPushButton)
@@ -73,7 +73,7 @@ class MainWindow(QMainWindow):
         btn_list.extend(full_btn_list)
         
         for btn in btn_list:
-            if index not in range(0, 3): #jeżeli strona wyszukiwania, konta lub kosza to odznaczamy przyciski sidebaru
+            if index not in range(0, 2): #jeżeli strona wyszukiwania, konta lub kosza to odznaczamy przyciski sidebaru
                 btn.setAutoExclusive(False)
                 btn.setChecked(False)
             else:
@@ -104,7 +104,7 @@ class MainWindow(QMainWindow):
             self.ui.new_album.clicked.connect(lambda _, id=row['album_id']: self.on_album_click(id))
 
     def on_album_click(self, id):
-        self.ui.stackedWidget.setCurrentIndex(6)
+        self.ui.stackedWidget.setCurrentIndex(5)
         query = "SELECT plyty.title, plyty.description, genre.title AS genre FROM plyty INNER JOIN  genre ON plyty.genre = genre.id_genre WHERE album_id = ?"
         db.execute(query, (id,))
         #set album info
@@ -112,6 +112,7 @@ class MainWindow(QMainWindow):
         self.ui.album_title.setText(result['title'])
         self.ui.album_description.setText(result['description'])
         self.ui.album_genre.setText(result['genre'])
+        self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"))
         #if is in liked we need to change it to dislike
         liked_album = {"album_id":id, "title":result['title'], "description":result['description']}
         if liked_album in CurrentUser.liked_albums:
@@ -121,9 +122,7 @@ class MainWindow(QMainWindow):
         else:
             self.ui.like_album.show()
             self.ui.like_album.setText("Like")
-            # Connect the clicked signal to the on_like_album_clicked function with the specified parameters
             self.ui.like_album.clicked.connect(lambda _: on_like_album_clicked(id, result['title'], result['description']))
-        self.ui.buy_album.show()
         def on_like_album_clicked(id, title, description):
             CurrentUser.like_album(id, title, description)
             self.ui.like_album.setText("Dislike")
@@ -149,10 +148,11 @@ class MainWindow(QMainWindow):
             self.ui.album_songs_table.setItem(row, 2, item_genre)
 
     def on_song_click(self, song_id, title, artist, genre):
-        self.ui.stackedWidget.setCurrentIndex(6)
+        self.ui.stackedWidget.setCurrentIndex(5)
         self.ui.album_title.setText(title)
         self.ui.album_description.setText(artist)
         self.ui.album_genre.setText(genre)
+        self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
         #if is in liked we need to change it to dislike
         liked_song = {"song_id":song_id, "title":title, "artist":artist, "genre":genre}
         if liked_song in CurrentUser.liked_songs:
@@ -163,7 +163,6 @@ class MainWindow(QMainWindow):
             self.ui.like_album.show()
             self.ui.like_album.setText("Like")
             self.ui.like_album.clicked.connect(lambda _: on_like_song_clicked(song_id, title, artist, genre))
-        self.ui.buy_album.show()
         def on_like_song_clicked(song_id, title, artist, genre):
             CurrentUser.like_song(song_id, title, artist, genre)
             self.ui.like_album.setText("Dislike")
@@ -174,14 +173,14 @@ class MainWindow(QMainWindow):
         self.ui.album_songs_table.setRowCount(0)
 
     def on_artist_click(self, id, pseudonim, description):
-        self.ui.stackedWidget.setCurrentIndex(6)
+        self.ui.stackedWidget.setCurrentIndex(5)
         self.ui.album_title.setText(pseudonim)
         self.ui.album_description.setText(description)
+        self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/user.svg"))
         self.ui.album_genre.setText("")
         self.ui.like_album.hide()
-        self.ui.buy_album.hide()
         #fill the table
-        query2 = "SELECT utwory.title, genre.title AS genre, plyty.title AS album FROM utwory INNER JOIN genre ON utwory.genre = genre.id_genre INNER JOIN plyty ON utwory.album = plyty.album_id WHERE utwory.artist = ?"
+        query2 = "SELECT utwory.title, genre.title AS genre, plyty.title AS album FROM utwory LEFT JOIN genre ON utwory.genre = genre.id_genre LEFT JOIN plyty ON utwory.album = plyty.album_id WHERE utwory.artist = ?"
         db.execute(query2, (id,))
         rows = db.fetchall()
         # Clear the table before populating it
@@ -201,7 +200,7 @@ class MainWindow(QMainWindow):
     def discover_fill(self):
         for i in reversed(range(self.ui.gridLayout_4.count())): 
             self.ui.gridLayout_4.itemAt(i).widget().setParent(None)
-        db.execute("SELECT utwory.song_id, utwory.title, tworcy.pseudonim AS artist, genre.title AS genre FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre ORDER BY song_id DESC")
+        db.execute("SELECT TOP 25 utwory.song_id, utwory.title, tworcy.pseudonim AS artist, genre.title AS genre FROM utwory INNER JOIN tworcy ON utwory.artist = tworcy.artist_id INNER JOIN genre ON utwory.genre = genre.id_genre ORDER BY song_id DESC")
         rows = db.fetchall()
         n = 0
         for row in rows:
@@ -218,7 +217,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.img.sizePolicy().hasHeightForWidth())
             self.ui.img.setSizePolicy(sizePolicy)
             self.ui.img.setText("")
-            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/play3.svg"))
+            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
             self.ui.img.setScaledContents(False)
             self.ui.img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.img.setObjectName("img")
@@ -245,54 +244,6 @@ class MainWindow(QMainWindow):
             self.ui.gridLayout_4.addWidget(self.ui.song_card, n//5, n%5, 1, 1)
             self.ui.song_card.mousePressEvent = lambda event, id=row['song_id'],title=row['title'],artist=row['artist'],genre=row['genre']: self.on_song_click(id,title,artist,genre)
             n += 1
-                   
-    def library_fill(self):
-        for i in reversed(range(self.ui.gridLayout_2.count())): 
-            self.ui.gridLayout_2.itemAt(i).widget().setParent(None)
-        for r in range(3): #row
-            for c in range(4): #col
-                self.ui.library_card = QtWidgets.QFrame(self.ui.library_container)
-                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-                sizePolicy.setHorizontalStretch(0)
-                sizePolicy.setVerticalStretch(0)
-                sizePolicy.setHeightForWidth(self.ui.library_card.sizePolicy().hasHeightForWidth())
-                self.ui.library_card.setSizePolicy(sizePolicy)
-                self.ui.library_card.setFrameShape(QtWidgets.QFrame.StyledPanel)
-                self.ui.library_card.setFrameShadow(QtWidgets.QFrame.Raised)
-                self.ui.library_card.setObjectName("library_card")
-                self.ui.verticalLayout_23 = QtWidgets.QVBoxLayout(self.ui.library_card)
-                self.ui.verticalLayout_23.setObjectName("verticalLayout_23")
-                self.ui.library_card_img = QtWidgets.QLabel(self.ui.library_card)
-                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.MinimumExpanding, QtWidgets.QSizePolicy.Expanding)
-                sizePolicy.setHorizontalStretch(0)
-                sizePolicy.setVerticalStretch(0)
-                sizePolicy.setHeightForWidth(self.ui.library_card_img.sizePolicy().hasHeightForWidth())
-                self.ui.library_card_img.setSizePolicy(sizePolicy)
-                self.ui.library_card_img.setText("")
-                self.ui.library_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-unchecked.svg"))
-                self.ui.library_card_img.setScaledContents(False)
-                self.ui.library_card_img.setAlignment(QtCore.Qt.AlignCenter)
-                self.ui.library_card_img.setObjectName("library_card_img")
-                self.ui.verticalLayout_23.addWidget(self.ui.library_card_img)
-                self.ui.library_card_title = QtWidgets.QLabel(self.ui.library_card)
-                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Preferred, QtWidgets.QSizePolicy.Preferred)
-                sizePolicy.setHorizontalStretch(0)
-                sizePolicy.setVerticalStretch(0)
-                sizePolicy.setHeightForWidth(self.ui.library_card_title.sizePolicy().hasHeightForWidth())
-                self.ui.library_card_title.setSizePolicy(sizePolicy)
-                self.ui.library_card_title.setObjectName("library_card_title")
-                self.ui.verticalLayout_23.addWidget(self.ui.library_card_title)
-                self.ui.library_card_autor = QtWidgets.QLabel(self.ui.library_card)
-                sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Preferred)
-                sizePolicy.setHorizontalStretch(0)
-                sizePolicy.setVerticalStretch(0)
-                sizePolicy.setHeightForWidth(self.ui.library_card_autor.sizePolicy().hasHeightForWidth())
-                self.ui.library_card_autor.setSizePolicy(sizePolicy)
-                self.ui.library_card_autor.setObjectName("library_card_autor")
-                self.ui.verticalLayout_23.addWidget(self.ui.library_card_autor)
-                self.ui.gridLayout_2.addWidget(self.ui.library_card, r, c, 1, 1)
-                self.ui.library_card_title.setText("Album")
-                self.ui.library_card_autor.setText("Artist")
     
     def liked_fill(self):
         for i in reversed(range(self.ui.gridLayout_3.count())): 
@@ -317,7 +268,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
             self.ui.liked_card_img.setSizePolicy(sizePolicy)
             self.ui.liked_card_img.setText("")
-            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/heart.svg"))
+            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
             self.ui.liked_card_img.setScaledContents(False)
             self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.liked_card_img.setObjectName("liked_card_img")
@@ -365,7 +316,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.liked_card_img.sizePolicy().hasHeightForWidth())
             self.ui.liked_card_img.setSizePolicy(sizePolicy)
             self.ui.liked_card_img.setText("")
-            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-unchecked.svg"))
+            self.ui.liked_card_img.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"))
             self.ui.liked_card_img.setScaledContents(False)
             self.ui.liked_card_img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.liked_card_img.setObjectName("liked_card_img")
@@ -416,7 +367,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.img.sizePolicy().hasHeightForWidth())
             self.ui.img.setSizePolicy(sizePolicy)
             self.ui.img.setText("")
-            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/play3.svg"))
+            self.ui.img.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
             self.ui.img.setScaledContents(False)
             self.ui.img.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.img.setObjectName("img")
@@ -463,7 +414,7 @@ class MainWindow(QMainWindow):
             sizePolicy.setHeightForWidth(self.ui.album_logo.sizePolicy().hasHeightForWidth())
             self.ui.album_logo.setSizePolicy(sizePolicy)
             self.ui.album_logo.setText("")
-            self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/music.svg"))
+            self.ui.album_logo.setPixmap(QtGui.QPixmap(":/icon/icomoon/radio-checked2.svg"))
             self.ui.album_logo.setScaledContents(False)
             self.ui.album_logo.setAlignment(QtCore.Qt.AlignCenter)
             self.ui.album_logo.setObjectName("album_logo")
@@ -495,9 +446,11 @@ class MainWindow(QMainWindow):
             self.ui.search_singer = QtWidgets.QPushButton(self.ui.scrollAreaWidgetContents_4)
             font = QtGui.QFont()
             font.setPointSize(14)
+            self.ui.icon2 = QtGui.QIcon()
+            self.ui.icon2.addPixmap(QtGui.QPixmap(":/icon/icomoon/user.svg"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
             self.ui.search_singer.setFont(font)
             self.ui.search_singer.setStyleSheet("")
-            self.ui.search_singer.setIcon(self.ui.icon8)
+            self.ui.search_singer.setIcon(self.ui.icon2)
             self.ui.search_singer.setIconSize(QtCore.QSize(30, 30))
             self.ui.search_singer.setObjectName("search_singer")
             self.ui.search_singer.setText(row['pseudonim'])
@@ -548,14 +501,11 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.setCurrentIndex(0)
         self.ostatnio_dodane_fill()
         self.discover_fill()
-    def on_library_toggled(self):
-        self.ui.stackedWidget.setCurrentIndex(1)
-        self.library_fill()
     def on_liked_toggled(self):
-        self.ui.stackedWidget.setCurrentIndex(2)
+        self.ui.stackedWidget.setCurrentIndex(1)
         self.liked_fill()
     def on_addmin_toggled(self):#dane do edytowania
-        self.ui.stackedWidget.setCurrentIndex(3)
+        self.ui.stackedWidget.setCurrentIndex(2)
         #dane do edytowania albumów
         def on_album_id_field_option_change(index):
             if index != 0:
@@ -604,21 +554,19 @@ class MainWindow(QMainWindow):
         self.ui.song_id_field.currentIndexChanged.connect(lambda: on_song_id_field_option_change(self.ui.song_id_field.currentIndex()))
     @pyqtSlot()
     def on_search_button_clicked(self):
-        self.ui.stackedWidget.setCurrentIndex(4)
         search_text = self.ui.search_line.text().strip()
         if search_text:
-            self.ui.stackedWidget.setCurrentIndex(4)
+            self.ui.stackedWidget.setCurrentIndex(3)
             self.search_songs_fill(search_text)
             self.search_albums_fill(search_text)
             self.search_artist_fill(search_text)
     def on_profile_clicked(self):
-        self.ui.stackedWidget.setCurrentIndex(5)
+        self.ui.stackedWidget.setCurrentIndex(4)
         self.ui.login.setText(CurrentUser.username)
         self.ui.name.setText(CurrentUser.name)
         self.ui.surname.setText(CurrentUser.surname)
         self.ui.email.setText(CurrentUser.email)
         self.ui.addres.setPlainText(CurrentUser.adress)
-
     def on_profile_save_btn_clicked(self):
         CurrentUser.username = self.ui.login.text()
         CurrentUser.name = self.ui.name.text()
@@ -626,6 +574,7 @@ class MainWindow(QMainWindow):
         CurrentUser.email = self.ui.email.text()
         CurrentUser.adress = self.ui.addres.toPlainText()
         CurrentUser.update_user_info()
+    
     ###ADMIN###
     @pyqtSlot()
     def on_album_add_btn_clicked(self):
@@ -749,7 +698,7 @@ class RegisterScreen(QDialog):
         haslo2 = self.ui.password_repeat.text()
         try:
             rejestracja(username, name, surname, email, haslo, haslo2)
-            #!udana rejestracja - pop up window
+            self.ui.error.setText("Registered successfully")
             login_window.show()
             self.close()
         except ValueError as e:
@@ -760,24 +709,20 @@ class RegisterScreen(QDialog):
         self.close()
 
 if __name__ == "__main__":
-    if os.path.isfile("dzika_szyszka.jpg"):
-        app = QApplication(sys.argv)
+    app = QApplication(sys.argv)
 
-        login_window = LoginScreen()
-        register_window = RegisterScreen()
-        window = MainWindow()
+    login_window = LoginScreen()
+    register_window = RegisterScreen()
+    window = MainWindow()
 
-        #stylesheet connect
-        file = QFile("./gui/light_layout.qss")
-        file.open(QFile.ReadOnly | QFile.Text)
-        stream = QTextStream(file)
-        app.setStyleSheet(stream.readAll())
+    #stylesheet connect
+    file = QFile("./gui/light_layout.qss")
+    file.open(QFile.ReadOnly | QFile.Text)
+    stream = QTextStream(file)
+    app.setStyleSheet(stream.readAll())
 
-        login_window.successful_login.connect(window.show)
+    login_window.successful_login.connect(window.show)
 
-        login_window.show()
-        sys.exit(app.exec_())
-        #conn.close() przy zamykaniu applikacji
-    #wykrzaczacz    
-    else:
-        exit(1)
+    login_window.show()
+    sys.exit(app.exec_())
+    #conn.close() przy zamykaniu applikacji
