@@ -709,24 +709,20 @@ class RegisterScreen(QDialog):
         self.close()
 
 if __name__ == "__main__":
-    if os.path.isfile("dzika_szyszka.jpg"):
-        app = QApplication(sys.argv)
+    app = QApplication(sys.argv)
 
-        login_window = LoginScreen()
-        register_window = RegisterScreen()
-        window = MainWindow()
+    login_window = LoginScreen()
+    register_window = RegisterScreen()
+    window = MainWindow()
 
-        #stylesheet connect
-        file = QFile("./gui/light_layout.qss")
-        file.open(QFile.ReadOnly | QFile.Text)
-        stream = QTextStream(file)
-        app.setStyleSheet(stream.readAll())
+    #stylesheet connect
+    file = QFile("./gui/light_layout.qss")
+    file.open(QFile.ReadOnly | QFile.Text)
+    stream = QTextStream(file)
+    app.setStyleSheet(stream.readAll())
 
-        login_window.successful_login.connect(window.show)
+    login_window.successful_login.connect(window.show)
 
-        login_window.show()
-        sys.exit(app.exec_())
-        #conn.close() przy zamykaniu applikacji
-    #wykrzaczacz    
-    else:
-        exit(1)
+    login_window.show()
+    sys.exit(app.exec_())
+    #conn.close() przy zamykaniu applikacji
