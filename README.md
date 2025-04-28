@@ -1,6 +1,7 @@
 # DuckyFM
 
-> Short one-sentence description or tagline about the project.
+> Python GUI application with Azure SQL Database 
+
 
 ## 📄 About
 
